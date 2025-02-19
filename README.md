@@ -70,3 +70,8 @@ Each event has the following attributes:
 
 - For any issues, please reach out via boudjema.mustafa.big\@gmail.com.
 
+## Screenshots
+
+![Screencapture 1](screenshots/screencapture-1.png)
+
+
