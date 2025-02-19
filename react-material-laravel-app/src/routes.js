@@ -22,6 +22,7 @@ import ResetPassword from "auth/reset-password";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import Waitlist from "layouts/waitlist";
 
 const routes = [
   {
@@ -32,6 +33,7 @@ const routes = [
     route: "/dashboard",
     component: <Empty />,
   },
+
   // {
   //   type: "collapse",
   //   name: "Dashboard",
@@ -161,6 +163,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/auth/reset-password",
     component: <ResetPassword />,
+  },
+  {
+    type: "",
+    name: "waitlist",
+    key: "waitlist",
+    icon: <Icon fontSize="small">waitlist</Icon>,
+    route: "/waitlist",
+    component: <Waitlist />,
   },
 ];
 

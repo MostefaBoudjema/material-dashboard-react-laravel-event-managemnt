@@ -23,9 +23,10 @@ class EventService {
         });
     }
     // join
-    joinEvent=async (token, eventId) => {
+    joinEvent=async (token,eventId) => {
+        // console.log(eventId);
         const joinEndpoint=`events/${eventId}/join`;
-        return await HttpService.get(joinEndpoint, {
+        return await HttpService.post(joinEndpoint, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',

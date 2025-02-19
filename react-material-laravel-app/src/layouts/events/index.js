@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Alert, Snackbar } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -9,57 +9,109 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
 import eventsTableData from "layouts/events/data/eventsTableData";
 import EventService from "services/event-service";
+import { useNavigate } from "react-router-dom";
+
 
 function Events() {
   const token=localStorage.getItem('token');
   const [events, setEvents]=useState([]);
   const [openDialog, setOpenDialog]=useState(false);
   const [currentEvent, setCurrentEvent]=useState(null);
+  const [errorMessage, setErrorMessage]=useState("");
+  const [successMessage, setSuccessMessage]=useState("");
   const [formData, setFormData]=useState({
     name: "", date_time: "", duration: "", location: "", capacity: "", waitlist_capacity: "", status: ""
   });
+  const navigate=useNavigate();
 
   useEffect(() => {
     const fetchEvents=async () => {
-      const data=await EventService.getEvents(token);
-      setEvents(data);
+      try {
+        const data=await EventService.getEvents(token);
+        setEvents(data);
+      } catch (error) {
+        setErrorMessage("Failed to fetch events.");
+        console.error(error.message);
+        setTimeout(() => setErrorMessage(""), 5000);
+      }
     };
     fetchEvents();
   }, [token]);
 
   const handleOpenDialog=async (event=null) => {
-    console.log(event);
-    if (event) {
-      const data=await EventService.showEvent(token, event.id);
-      setCurrentEvent(event);
-      setFormData(data);
-    } else {
-      setCurrentEvent(null);
-      setFormData({ name: "", date_time: "", duration: "", location: "", capacity: "", waitlist_capacity: "", status: "" });
+    try {
+      if (event) {
+        const data=await EventService.showEvent(token, event.id);
+        setCurrentEvent(event);
+        setFormData(data);
+      } else {
+        setCurrentEvent(null);
+        setFormData({ name: "", date_time: "", duration: "", location: "", capacity: "", waitlist_capacity: "", status: "" });
+      }
+      setErrorMessage("");
+      setOpenDialog(true);
+    } catch (error) {
+      setErrorMessage("Failed to load event details.");
+      console.error(error.message);
+      setTimeout(() => setErrorMessage(""), 5000);
     }
-    setOpenDialog(true);
   };
 
   const handleCloseDialog=() => setOpenDialog(false);
 
   const handleFormSubmit=async () => {
-    if (currentEvent) {
-      await EventService.updateEvent(token, currentEvent.id, formData);
-    } else {
-      await EventService.createEvent(token, formData);
+    try {
+      if (currentEvent) {
+        await EventService.updateEvent(token, currentEvent.id, formData);
+      } else {
+        await EventService.createEvent(token, formData);
+      }
+      const updatedEvents=await EventService.getEvents(token);
+      setEvents(updatedEvents);
+      handleCloseDialog();
+      setErrorMessage("");
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.error(error.message);
+      setTimeout(() => setErrorMessage(""), 5000);
     }
-    const updatedEvents=await EventService.getEvents(token);
-    setEvents(updatedEvents);
-    handleCloseDialog();
   };
 
   const handleDelete=async (e) => {
-    // console.log(e.id);
-    await EventService.deleteEvent(token, e.id);
-    setEvents(events.filter(event => event.id!==e.id));
+    try {
+      await EventService.deleteEvent(token, e.id);
+      setEvents(events.filter(event => event.id!==e.id));
+      setSuccessMessage("Event deleted successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (error) {
+      setErrorMessage("Failed to delete event.");
+      console.error(error.message);
+      setTimeout(() => setErrorMessage(""), 5000);
+    }
   };
 
-  const { columns, rows }=eventsTableData(events, handleOpenDialog, handleDelete);
+  const handleJoin = async (eventId) => {
+    try {
+      await EventService.joinEvent(token, eventId);
+      const updatedEvents = await EventService.getEvents(token);
+      setEvents(updatedEvents);
+      setSuccessMessage("Joined successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (error) {
+      console.log(error);
+      if (error.status == '409') {
+        navigate('/waitlist');
+      } else {
+        setErrorMessage(error.message);
+        setTimeout(() => setErrorMessage(""), 5000);
+      }
+    }
+  };
+  
+
+
+
+  const { columns, rows }=eventsTableData(events, handleOpenDialog, handleDelete, handleJoin);
 
   return (
     <DashboardLayout>
@@ -80,27 +132,45 @@ function Events() {
               >
                 <Grid container justifyContent="space-between" alignItems="center">
                   <MDTypography variant="h6" color="white">Events Table</MDTypography>
-                  <Button variant="contained" color="white" onClick={() => handleOpenDialog(null)}>
+                  {/* <Button variant="contained" color="white" onClick={() => handleOpenDialog(null)}>
                     New Event
-                  </Button>
+                  </Button> */}
                 </Grid>
               </MDBox>
 
               <MDBox pt={3}>
-                <DataTable table={{ columns, rows }} isSorted={false} entriesPerPage={false} showTotalEntries={true} noEndBorder />
+                {errorMessage&&<Alert severity="error">{errorMessage}</Alert>}
+                <Snackbar
+                  open={!!successMessage}
+                  autoHideDuration={3000}
+                  onClose={() => setSuccessMessage("")}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                >
+                  <Alert onClose={() => setSuccessMessage("")} severity="success" sx={{ width: '100%' }}>
+                    {successMessage}
+                  </Alert>
+                </Snackbar>
+
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted={false}
+                  entriesPerPage={false}
+                  showTotalEntries={true}
+                  noEndBorder
+                />
               </MDBox>
             </Card>
           </Grid>
         </Grid>
       </MDBox>
 
-      {/* DialogForm */}
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth>
         <DialogTitle>{currentEvent? "Edit Event":"Create Event"}</DialogTitle>
         <DialogContent>
+          {errorMessage&&<Alert severity="error">{errorMessage}</Alert>}
           {Object.keys(formData)
             .filter((key) => !["id", "created_at", "updated_at"].includes(key))
-            .map((key) =>
+            .map((key) => (
               key==="status"? (
                 <TextField
                   key={key}
@@ -136,18 +206,13 @@ function Events() {
                   margin="normal"
                 />
               )
-            )}
-
+            ))}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleFormSubmit} color="primary">
-            Save
-          </Button>
+          <Button onClick={handleFormSubmit} color="primary">Save</Button>
         </DialogActions>
       </Dialog>
-
-
     </DashboardLayout>
   );
 }

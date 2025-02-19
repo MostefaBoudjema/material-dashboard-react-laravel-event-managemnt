@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V2\Auth\RegisterController;
 use App\Http\Controllers\Api\V2\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V2\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\V2\EventController;
+use App\Http\Controllers\Api\V2\EventParticipantController;
 use App\Http\Controllers\Api\V2\MeController;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
@@ -45,5 +46,7 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     
     Route::resource('events', EventController::class);
     // Route::get('/events', [EventController::class, 'index']);
-    Route::post('/events/{event}/join', [EventController::class, 'join']);
+    Route::post('/events/{eventId}/join', [EventParticipantController::class, 'join'])->middleware('event.capacity');
+    // Route::post('/events/{eventP}/join', [EventParticipantController::class, 'join']);
+
 });

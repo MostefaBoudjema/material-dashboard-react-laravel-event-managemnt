@@ -45,8 +45,7 @@ Each event has the following attributes:
 - Users see only published events in a calendar view.
 - Events the user has joined are highlighted.
 
-
-  ## Laravel JSON:API Backend Installation
+## Laravel JSON:API Backend Installation
 
 1. Navigate in your Laravel API project folder: `cd your-laravel-json-api-project`
 2. Install project dependencies: `composer install`
