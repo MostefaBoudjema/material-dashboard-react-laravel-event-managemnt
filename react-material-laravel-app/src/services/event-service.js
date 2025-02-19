@@ -67,6 +67,17 @@ class EventService {
         });
     }
 
+    getJoinedEvents = async (token) => {
+        const joinedEventsEndpoint = 'events/joined';
+        return await HttpService.get(joinedEventsEndpoint, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+    };
+    
+      
 
 
 }

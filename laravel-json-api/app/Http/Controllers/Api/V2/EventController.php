@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V2;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V2\EventRequest;
 use App\Models\Event;
+use App\Models\EventParticipant;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -74,5 +75,21 @@ class EventController extends Controller
     {
         $event->delete();
         return response()->json(['message' => 'Event deleted successfully']);
+    }
+
+
+    public function joinedEventsToday(Request $request)
+    {
+        $user = $request->user();
+        $today = now()->toDateString();
+
+        $joinedEvents = EventParticipant::where('user_id', $user->id)
+            ->whereHas('event', function ($query) use ($today) {
+                $query->whereDate('date_time', $today);
+            })
+            ->with('event')
+            ->get();
+
+        return response()->json($joinedEvents);
     }
 }

@@ -38,15 +38,14 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::get('/user', function (Request $request) {
         return $request->user();
     })->middleware('auth:sanctum');
-    // Laravel\Passport\Passport::routes();
+    
     $server->resource('users', JsonApiController::class);
-    // $server->resource('events', EventController::class);
     Route::get('me', [MeController::class, 'readProfile']);
     Route::patch('me', [MeController::class, 'updateProfile']);
     
+    Route::get('/events/joined', [EventController::class, 'joinedEventsToday']);
     Route::resource('events', EventController::class);
-    // Route::get('/events', [EventController::class, 'index']);
     Route::post('/events/{eventId}/join', [EventParticipantController::class, 'join'])->middleware('event.capacity');
-    // Route::post('/events/{eventP}/join', [EventParticipantController::class, 'join']);
+
 
 });

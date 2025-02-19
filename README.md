@@ -68,7 +68,7 @@ Each event has the following attributes:
 
 ## Contact
 
-- For any issues, please reach out via boudjema.mustafa.big\@gmail.com.
+- For any issues, please reach out via mostefa.boudjema.dev\@gmail.com.
 
 ## Screenshots
 
