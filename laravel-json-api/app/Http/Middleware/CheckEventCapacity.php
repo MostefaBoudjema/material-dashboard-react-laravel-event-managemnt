@@ -32,7 +32,7 @@ class CheckEventCapacity
         $participantsCount = $event->participants()->count();
 
         if ($participantsCount >= $event->capacity) {
-            return response()->json(['message' => 'Event full, redirect to waitlist','status'=>'409'], 409);
+            return response()->json(['message' => 'Event full, redirecting to waitlist...','status'=>'409'], 409);
         }
         
 

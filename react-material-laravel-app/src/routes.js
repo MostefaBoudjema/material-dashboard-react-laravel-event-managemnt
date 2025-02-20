@@ -23,6 +23,7 @@ import ResetPassword from "auth/reset-password";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Waitlist from "layouts/waitlist";
+import EventCalendar from "layouts/events-calendar";
 
 const routes = [
   {
@@ -65,6 +66,14 @@ const routes = [
     icon: <Icon fontSize="small">event</Icon>,
     route: "/events",
     component: <Events />,
+  },
+  {
+    type: "collapse",
+    name: "Events Calendar",
+    key: "events-calendar",
+    icon: <Icon fontSize="small">event Calendar</Icon>,
+    route: "/events-calendar",
+    component: <EventCalendar />,
   },
   // {
   //   type: "collapse",
@@ -165,13 +174,14 @@ const routes = [
     component: <ResetPassword />,
   },
   {
-    type: "",
+    type: "collapse2",
     name: "waitlist",
     key: "waitlist",
     icon: <Icon fontSize="small">waitlist</Icon>,
-    route: "/waitlist",
+    route: "/waitlist/:eventId",
     component: <Waitlist />,
   },
+  
 ];
 
 export default routes;

@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Alert, Snackbar } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Alert, Snackbar } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import DataTable from "examples/Tables/DataTable";
-import eventsTableData from "layouts/events/data/eventsTableData";
 import EventService from "services/event-service";
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from "react-router-dom";
 
+const localizer=momentLocalizer(moment);
 
-function Events() {
+function EventCalendar() {
   const token=localStorage.getItem('token');
   const [events, setEvents]=useState([]);
   const [openDialog, setOpenDialog]=useState(false);
@@ -30,15 +32,46 @@ function Events() {
         const data=await EventService.getEvents(token);
         setEvents(data);
       } catch (error) {
-        setErrorMessage("Failed to fetch events.");
-        console.error(error.message);
+        setErrorMessage(error.message||"Failed to fetch events.");
         setTimeout(() => setErrorMessage(""), 5000);
       }
     };
     fetchEvents();
   }, [token]);
 
+  const handleJoinEvent=async () => {
+    try {
+      await EventService.joinEvent(token, currentEvent.id);
+      setSuccessMessage("Successfully joined the event.");
+      handleCloseDialog();
+    } catch (error) {
+      setErrorMessage(error.message||"Failed to join the event.");
+      setTimeout(() => {
+        setErrorMessage("");
+        if (error.status=='409') {
+          navigate(`/waitlist/${currentEvent.id}`);
+        }
+      }, 5000);
+    }
+  };
+
+
+  const handleDeleteEvent=async () => {
+    try {
+      await EventService.deleteEvent(token, currentEvent.id);
+      const updatedEvents=await EventService.getEvents(token);
+      setEvents(updatedEvents);
+      setSuccessMessage("Event deleted successfully.");
+      handleCloseDialog();
+    } catch (error) {
+      setErrorMessage(error.message||"Failed to delete the event.");
+      setTimeout(() => setErrorMessage(""), 5000);
+    }
+  };
+
+
   const handleOpenDialog=async (event=null) => {
+    console.log('handleOpenDialog');
     try {
       if (event) {
         const data=await EventService.showEvent(token, event.id);
@@ -51,68 +84,46 @@ function Events() {
       setErrorMessage("");
       setOpenDialog(true);
     } catch (error) {
-      setErrorMessage("Failed to load event details.");
+      setErrorMessage(error.message||"Failed to load event details.");
       console.error(error.message);
       setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 
-  const handleCloseDialog=() => setOpenDialog(false);
+  // const handleCloseDialog=() => setOpenDialog(false);
+  const handleCloseDialog=async () => {
+    setOpenDialog(false);
+    setFormData({ name: "", date_time: "", duration: "", location: "", capacity: "", waitlist_capacity: "", status: "" });
+  }
 
   const handleFormSubmit=async () => {
     try {
       if (currentEvent) {
         await EventService.updateEvent(token, currentEvent.id, formData);
+        setSuccessMessage("Event updated successfully.");
       } else {
+
         await EventService.createEvent(token, formData);
+        setSuccessMessage("Event created successfully.");
       }
       const updatedEvents=await EventService.getEvents(token);
       setEvents(updatedEvents);
       handleCloseDialog();
-      setErrorMessage("");
     } catch (error) {
-      setErrorMessage(error.message);
-      console.error(error.message);
+      setErrorMessage(error.message||"Failed to save event.");
       setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 
-  const handleDelete=async (e) => {
-    try {
-      await EventService.deleteEvent(token, e.id);
-      setEvents(events.filter(event => event.id!==e.id));
-      setSuccessMessage("Event deleted successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      setErrorMessage("Failed to delete event.");
-      console.error(error.message);
-      setTimeout(() => setErrorMessage(""), 5000);
-    }
+  const handleSelectSlot=({ start, end }) => {
+    setFormData({ ...formData, date_time: moment(start).format('YYYY-MM-DDTHH:mm') });
+    setCurrentEvent(null);
+    setOpenDialog(true);
   };
 
-  const handleJoin = async (eventId) => {
-    try {
-      await EventService.joinEvent(token, eventId);
-      const updatedEvents = await EventService.getEvents(token);
-      setEvents(updatedEvents);
-      setSuccessMessage("Joined successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      setErrorMessage(error.message||"Failed to join the event.");
-      setTimeout(() => {
-        setErrorMessage("");
-        if (error.status=='409') {
-          
-        navigate(`/waitlist/${eventId}`);
-        }
-      }, 5000);
-    }
+  const handleEventClick=(event) => {
+    handleOpenDialog(event);
   };
-  
-
-
-
-  const { columns, rows }=eventsTableData(events, handleOpenDialog, handleDelete, handleJoin);
 
   return (
     <DashboardLayout>
@@ -131,15 +142,9 @@ function Events() {
                 borderRadius="lg"
                 coloredShadow="info"
               >
-                <Grid container justifyContent="space-between" alignItems="center">
-                  <MDTypography variant="h6" color="white">Events Table</MDTypography>
-                  {/* <Button variant="contained" color="white" onClick={() => handleOpenDialog(null)}>
-                    New Event
-                  </Button> */}
-                </Grid>
+                <MDTypography variant="h6" color="white">Events Calendar</MDTypography>
               </MDBox>
-
-              <MDBox pt={3}>
+              <MDBox p={3}>
                 {errorMessage&&<Alert severity="error">{errorMessage}</Alert>}
                 <Snackbar
                   open={!!successMessage}
@@ -151,13 +156,20 @@ function Events() {
                     {successMessage}
                   </Alert>
                 </Snackbar>
-
-                <DataTable
-                  table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={true}
-                  noEndBorder
+                <Calendar
+                  localizer={localizer}
+                  events={events.map(event => ({
+                    id: event.id,
+                    title: event.name,
+                    start: new Date(event.date_time),
+                    end: new Date(new Date(event.date_time).getTime()+event.duration*60000)
+                  }))}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{ height: 600 }}
+                  selectable
+                  onSelectEvent={handleEventClick}
+                  onSelectSlot={handleSelectSlot}
                 />
               </MDBox>
             </Card>
@@ -183,6 +195,7 @@ function Events() {
                   margin="normal"
                   SelectProps={{ native: true }}
                 >
+                  <option value="">_</option>
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
                 </TextField>
@@ -210,12 +223,29 @@ function Events() {
             ))}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleFormSubmit} color="primary">Save</Button>
+          
+          <Button variant="contained" color="success" onClick={handleFormSubmit}>
+            Save
+          </Button>
+          {currentEvent&&(
+            <Button variant="contained" color="error" onClick={handleDeleteEvent}>
+              Delete
+            </Button>
+          )}
+          {currentEvent&&(
+            <Button variant="contained" color="success" onClick={handleJoinEvent}>
+              Join
+            </Button>
+          )}
+          <Button variant="contained" color="error" onClick={handleCloseDialog}>
+            Cancel
+          </Button>
         </DialogActions>
+
+
       </Dialog>
     </DashboardLayout>
   );
 }
 
-export default Events;
+export default EventCalendar;

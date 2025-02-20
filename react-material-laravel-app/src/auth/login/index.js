@@ -125,7 +125,7 @@ function Login() {
             Sign in
           </MDTypography>
           <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
+            {/* <Grid item xs={2}>
               <MDTypography component={MuiLink} href="#" variant="body1" color="white">
                 <FacebookIcon color="inherit" />
               </MDTypography>
@@ -139,7 +139,7 @@ function Login() {
               <MDTypography component={MuiLink} href="#" variant="body1" color="white">
                 <GoogleIcon color="inherit" />
               </MDTypography>
-            </Grid>
+            </Grid> */}
           </Grid>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -188,7 +188,7 @@ function Login() {
                 {credentialsErros}
               </MDTypography>
             )}
-            <MDBox mt={3} mb={1} textAlign="center">
+            {/* <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 Forgot your password? Reset it{" "}
                 <MDTypography
@@ -202,7 +202,7 @@ function Login() {
                   here
                 </MDTypography>
               </MDTypography>
-            </MDBox>
+            </MDBox> */}
             <MDBox mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 Don&apos;t have an account?{" "}

@@ -40,7 +40,9 @@ class EventParticipantController extends Controller
                 $eventStart->lt($userEventEnd) &&
                 $eventEnd->gt($userEventStart)
             ) {
-                return response()->json(['message' => 'You are already participating in an overlapping event'], 409);
+                return response()->json([
+                    'message' => 'You are already participating in an overlapping event: ' . $userEvent->name,
+                ], 409);
             }
         }
         

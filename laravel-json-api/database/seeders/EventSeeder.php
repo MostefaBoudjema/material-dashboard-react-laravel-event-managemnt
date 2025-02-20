@@ -5,31 +5,35 @@ namespace Database\Seeders;
 use App\Models\Event;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class EventSeeder extends Seeder
 {
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+        DB::table('events')->truncate();
+
+
+        Event::create([
+            'name' => 'Web Development Workshop',
+            'date_time' => Carbon::parse('2025-02-20 10:00:00'),
+            'duration' => 180,
+            'location' => 'Room 203, San Francisco',
+            'capacity' => 50,
+            'waitlist_capacity' => 20,
+            'status' => 'published',
+        ]);
         Event::create([
             'name' => 'Tech Conference 2025',
             'date_time' => Carbon::parse('2025-05-10 09:00:00'),
             'duration' => 120,
             'location' => 'Conference Hall A, New York',
-            'capacity' => 200,
+            'capacity' => 2,
             'waitlist_capacity' => 50,
             'status' => 'published',
         ]);
-
-        Event::create([
-            'name' => 'Web Development Workshop',
-            'date_time' => Carbon::parse('2025-06-20 10:00:00'),
-            'duration' => 180,
-            'location' => 'Room 203, San Francisco',
-            'capacity' => 50,
-            'waitlist_capacity' => 20,
-            'status' => 'draft',
-        ]);
-
         Event::create([
             'name' => 'AI Summit 2025',
             'date_time' => Carbon::parse('2025-07-15 08:00:00'),
@@ -47,12 +51,12 @@ class EventSeeder extends Seeder
             'location' => 'Grand Ballroom, Los Angeles',
             'capacity' => 250,
             'waitlist_capacity' => 75,
-            'status' => 'draft',
+            'status' => 'published',
         ]);
 
         Event::create([
             'name' => 'React Dev Meetup',
-            'date_time' => Carbon::parse('2025-09-05 13:00:00'),
+            'date_time' => Carbon::parse('2025-08-10 11:00:00'),
             'duration' => 120,
             'location' => 'Tech Hub, Boston',
             'capacity' => 100,
@@ -67,7 +71,7 @@ class EventSeeder extends Seeder
             'location' => 'Design Studio, Seattle',
             'capacity' => 50,
             'waitlist_capacity' => 15,
-            'status' => 'published',
+            'status' => 'draft',
         ]);
 
         Event::create([
@@ -111,4 +115,3 @@ class EventSeeder extends Seeder
         ]);
     }
 }
-

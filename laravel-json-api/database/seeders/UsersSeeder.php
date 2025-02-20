@@ -26,10 +26,20 @@ class UsersSeeder extends Seeder
             'email' => 'admin@jsonapi.com',
             'password' => 'secret'
         ]);
+        // User::create([
+        //     'name' => 'New',
+        //     'email' => 'user@jsonapi.com',
+        //     'password' => 'secret'
+        // ]);
         User::create([
-            'name' => 'New',
-            'email' => 'user@jsonapi.com',
-            'password' => 'secret'
+            'name' => 'mustafa',
+            'email' => 'mustafaaboudjema@gmail.com',
+            'password' => '123456789'
+        ]);
+        User::create([
+            'name' => 'mustafa',
+            'email' => 'myreal17@gmail.com',
+            'password' => '123456789'
         ]);
     }
 }

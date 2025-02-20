@@ -31,8 +31,11 @@ Each event has the following attributes:
 ### 4. User Registration & Event Participation
 
 - User registration functionality.
+![Screencapture 2](screenshots/screencapture-2.png)
+![Screencapture 3](screenshots/screencapture-3.png)
 - Users can join one or more events.
 - Confirmation email upon successful event registration.
+![Screencapture 12](screenshots/screencapture-12.png)
 - Reminder notification on the day of the event.
 - Users cannot join the same event twice.
 - Users cannot join overlapping events on the same day.

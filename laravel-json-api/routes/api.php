@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V2\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V2\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\V2\EventController;
 use App\Http\Controllers\Api\V2\EventParticipantController;
+use App\Http\Controllers\Api\V2\EventWaitlistController;
 use App\Http\Controllers\Api\V2\MeController;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
@@ -38,7 +39,7 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::get('/user', function (Request $request) {
         return $request->user();
     })->middleware('auth:sanctum');
-    
+
     $server->resource('users', JsonApiController::class);
     Route::get('me', [MeController::class, 'readProfile']);
     Route::patch('me', [MeController::class, 'updateProfile']);
@@ -46,6 +47,7 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::get('/events/joined', [EventController::class, 'joinedEventsToday']);
     Route::resource('events', EventController::class);
     Route::post('/events/{eventId}/join', [EventParticipantController::class, 'join'])->middleware('event.capacity');
+    Route::post('/waitlist/{eventId}/join', [EventWaitlistController::class, 'joinWaitlist']);
 
 
 });

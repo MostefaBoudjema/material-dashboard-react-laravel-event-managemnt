@@ -22,6 +22,7 @@ class EventController extends Controller
                 ->with(['participants' => function ($query) {
                     $query->where('user_id', auth()->id());
                 }])
+                ->orderBy('date_time')
                 ->get()
                 ->map(function ($event) {
                     $event->is_participating = $event->participants->isNotEmpty();
@@ -35,6 +36,7 @@ class EventController extends Controller
                 ->with(['participants' => function ($query) {
                     $query->where('user_id', auth()->id());
                 }])
+                ->orderBy('date_time')
                 ->get()
                 ->map(function ($event) {
                     $event->is_participating = $event->participants->isNotEmpty();
