@@ -2,7 +2,7 @@
 
 ## Objective
 
-The objective of this test is to assess the ability to implement a Laravel application with user roles, event management, and scheduling constraints while leveraging Laravel Nova for the admin panel and React for the frontend.
+The objective of this test is to assess the ability to implement a Laravel application with user roles, event management, and scheduling constraints while leveraging Laravel Material dashboard for the admin panel and React for the frontend.
 
 ## Features
 
@@ -11,13 +11,11 @@ The objective of this test is to assess the ability to implement a Laravel appli
 - **Admin**: Can view all events (draft and published).
 - **User**: Can view only published events.
 
-### 2. Admin Panel (Bonus: Laravel Nova)
-
+### 2. Admin Panel 
 - CRUD operations for events.
 ![Screencapture 9](screenshots/screencapture-9.png)
 ![Screencapture 10](screenshots/screencapture-10.png)
 ![Screencapture 11](screenshots/screencapture-11.png)
-- Laravel Nova usage for the admin panel (bonus point).
 
 ### 3. Event Management
 
@@ -58,7 +56,7 @@ Each event has the following attributes:
 ![Screencapture 1](screenshots/screencapture-1.png)
 - Users see only published events in a calendar view.
 ![Screencapture 13](screenshots/screencapture-13.png)
-- Events the user has joined are highlighted.
+- Events the user has joined are highlighted in green background.
 ![Screencapture 13](screenshots/screencapture-15.png)
 
 ## Laravel JSON:API Backend Installation

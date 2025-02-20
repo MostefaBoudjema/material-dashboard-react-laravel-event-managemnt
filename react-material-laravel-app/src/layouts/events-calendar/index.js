@@ -39,6 +39,7 @@ function EventCalendar() {
     fetchEvents();
   }, [token]);
 
+
   const handleJoinEvent=async () => {
     try {
       await EventService.joinEvent(token, currentEvent.id);
@@ -90,7 +91,6 @@ function EventCalendar() {
     }
   };
 
-  // const handleCloseDialog=() => setOpenDialog(false);
   const handleCloseDialog=async () => {
     setOpenDialog(false);
     setFormData({ name: "", date_time: "", duration: "", location: "", capacity: "", waitlist_capacity: "", status: "" });
@@ -162,8 +162,15 @@ function EventCalendar() {
                     id: event.id,
                     title: event.name,
                     start: new Date(event.date_time),
-                    end: new Date(new Date(event.date_time).getTime()+event.duration*60000)
+                    end: new Date(new Date(event.date_time).getTime()+event.duration*60000),
+                    is_participating: event.is_participating, 
                   }))}
+                  eventPropGetter={(event) => ({
+                    style: {
+                      backgroundColor: event.is_participating ? "#4caf50" : "#3174ad",
+                      color: "white",
+                    },
+                  })}
                   startAccessor="start"
                   endAccessor="end"
                   style={{ height: 600 }}
@@ -223,7 +230,7 @@ function EventCalendar() {
             ))}
         </DialogContent>
         <DialogActions>
-          
+
           <Button variant="contained" color="success" onClick={handleFormSubmit}>
             Save
           </Button>

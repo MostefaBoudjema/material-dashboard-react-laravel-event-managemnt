@@ -61,7 +61,7 @@ const routes = [
   // },
   {
     type: "collapse",
-    name: "Events",
+    name: "Events Table",
     key: "events",
     icon: <Icon fontSize="small">event</Icon>,
     route: "/events",
@@ -71,7 +71,7 @@ const routes = [
     type: "collapse",
     name: "Events Calendar",
     key: "events-calendar",
-    icon: <Icon fontSize="small">event Calendar</Icon>,
+    icon: <Icon fontSize="small">calendar_month</Icon>,
     route: "/events-calendar",
     component: <EventCalendar />,
   },
