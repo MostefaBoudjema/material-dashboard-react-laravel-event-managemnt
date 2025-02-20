@@ -61,7 +61,7 @@ Each event has the following attributes:
 ![Screencapture 12](screenshots/screencapture-12.png)
 - Reminder notification on the day of the event.
 ![Screencapture 4](screenshots/screencapture-4.png)
-![Screencapture 4B](screenshots/screencapture-4B.png)
+![Screencapture 4B](screenshots/screencapture-4B.JPG)
 - Users cannot join the same event twice.
 ![Screencapture 5](screenshots/screencapture-5.png)
 - Users cannot join overlapping events on the same day.
