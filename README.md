@@ -14,6 +14,9 @@ The objective of this test is to assess the ability to implement a Laravel appli
 ### 2. Admin Panel (Bonus: Laravel Nova)
 
 - CRUD operations for events.
+![Screencapture 9](screenshots/screencapture-9.png)
+![Screencapture 10](screenshots/screencapture-10.png)
+![Screencapture 11](screenshots/screencapture-11.png)
 - Laravel Nova usage for the admin panel (bonus point).
 
 ### 3. Event Management
@@ -34,19 +37,29 @@ Each event has the following attributes:
 ![Screencapture 2](screenshots/screencapture-2.png)
 ![Screencapture 3](screenshots/screencapture-3.png)
 - Users can join one or more events.
+![Screencapture 1](screenshots/screencapture-1.png)
 - Confirmation email upon successful event registration.
 ![Screencapture 12](screenshots/screencapture-12.png)
 - Reminder notification on the day of the event.
+![Screencapture 4](screenshots/screencapture-4.png)
 - Users cannot join the same event twice.
+![Screencapture 5](screenshots/screencapture-5.png)
 - Users cannot join overlapping events on the same day.
+![Screencapture 6](screenshots/screencapture-6.png)
 - Capacity handling using middleware (cannot join full events).
+![Screencapture 14](screenshots/screencapture-14.png)
 - Waitlist functionality when an event is full.
+![Screencapture 7](screenshots/screencapture-7.png)
+![Screencapture 8](screenshots/screencapture-8.png)
 
 ### 5. Event Display for Users
 
 - Admin sees all events (draft and published).
+![Screencapture 1](screenshots/screencapture-1.png)
 - Users see only published events in a calendar view.
+![Screencapture 13](screenshots/screencapture-13.png)
 - Events the user has joined are highlighted.
+![Screencapture 13](screenshots/screencapture-15.png)
 
 ## Laravel JSON:API Backend Installation
 
@@ -73,8 +86,5 @@ Each event has the following attributes:
 
 - For any issues, please reach out via mostefa.boudjema.dev\@gmail.com.
 
-## Screenshots
-
-![Screencapture 1](screenshots/screencapture-1.png)
 
 
