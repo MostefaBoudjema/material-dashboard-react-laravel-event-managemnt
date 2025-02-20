@@ -57,27 +57,6 @@ class EventParticipantController extends Controller
         return response()->json(['message' => 'Participation recorded successfully', 'data' => $participation]);
     }
 
-    // public function join(Request $request, $eventId)
-    // {
-    //     $event = Event::findOrFail($eventId);
 
-    //     $existingParticipation = EventParticipant::where('user_id', auth()->id())
-    //         ->where('event_id', $event->id)
-    //         ->exists();
-
-    //     if ($existingParticipation) {
-    //         return response()->json(['message' => 'You are already participating in this event'], 409);
-    //     }
-
-    //     $participation = EventParticipant::create([
-    //         'user_id' => auth()->id(),
-    //         'event_id' => $event->id,
-    //     ]);
-
-    //     // Send confirmation email
-    //     Mail::to(auth()->user()->email)->send(new EventRegistrationConfirmation($event));
-
-    //     return response()->json(['message' => 'Participation recorded successfully', 'data' => $participation]);
-    // }
 
 }

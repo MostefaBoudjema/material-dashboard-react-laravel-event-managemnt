@@ -76,7 +76,7 @@ class EventSeeder extends Seeder
 
         Event::create([
             'name' => 'Fullstack Development Bootcamp',
-            'date_time' => Carbon::parse('2025-11-10 09:30:00'),
+            'date_time' => Carbon::parse('2025-02-22 10:00:00'),
             'duration' => 240,
             'location' => 'Room 101, Austin',
             'capacity' => 60,
@@ -86,7 +86,7 @@ class EventSeeder extends Seeder
 
         Event::create([
             'name' => 'Cloud Computing Expo',
-            'date_time' => Carbon::parse('2025-12-20 10:00:00'),
+            'date_time' => Carbon::parse('2025-02-21 10:00:00'),
             'duration' => 150,
             'location' => 'Convention Center, Miami',
             'capacity' => 500,

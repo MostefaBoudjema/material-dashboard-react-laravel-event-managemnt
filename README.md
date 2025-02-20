@@ -1,8 +1,29 @@
-# Laravel Programming Test
+# Laravel React Event Management
 
 ## Objective
 
 The objective of this test is to assess the ability to implement a Laravel application with user roles, event management, and scheduling constraints while leveraging Laravel Material dashboard for the admin panel and React for the frontend.
+
+## Laravel JSON:API Backend Installation
+
+1. Navigate in your Laravel API project folder: `cd your-laravel-json-api-project`
+2. Install project dependencies: `composer install`
+3. Create a new .env file: `cp .env.example .env`
+4. Add your own database credentials in the .env file in DB_DATABASE, DB_USERNAME, DB_PASSWORD
+5. Create users table: `php artisan migrate --seed`
+6. Generate application key: `php artisan key:generate`
+7. Install Laravel Passport: `php artisan passport:install` and set in the .env file the CLIENT_ID and CLIENT_SECRET that you receive
+8. Add your own mailtrap.io credentials in MAIL_USERNAME and MAIL_PASSWORD in the .env file
+
+## Material React Frontend Installation
+
+1. Set up your api for the project
+2. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
+3. Navigate to the root ./ directory of the product and run `yarn install` or `npm install` to install our local dependencies.
+4. Add in your projeact an .env file with the variables
+ - `REACT_APP_URL=your-react-project`
+ - `REACT_APP_API_URL=the-path-of-the-api`
+ - `REACT_APP_IS_DEMO=false` if you don't want any restrications and true in case you want to add restrictions
 
 ## Features
 
@@ -40,6 +61,7 @@ Each event has the following attributes:
 ![Screencapture 12](screenshots/screencapture-12.png)
 - Reminder notification on the day of the event.
 ![Screencapture 4](screenshots/screencapture-4.png)
+![Screencapture 4B](screenshots/screencapture-4B.png)
 - Users cannot join the same event twice.
 ![Screencapture 5](screenshots/screencapture-5.png)
 - Users cannot join overlapping events on the same day.
@@ -59,26 +81,6 @@ Each event has the following attributes:
 - Events the user has joined are highlighted in green background.
 ![Screencapture 13](screenshots/screencapture-15.png)
 
-## Laravel JSON:API Backend Installation
-
-1. Navigate in your Laravel API project folder: `cd your-laravel-json-api-project`
-2. Install project dependencies: `composer install`
-3. Create a new .env file: `cp .env.example .env`
-4. Add your own database credentials in the .env file in DB_DATABASE, DB_USERNAME, DB_PASSWORD
-5. Create users table: `php artisan migrate --seed`
-6. Generate application key: `php artisan key:generate`
-7. Install Laravel Passport: `php artisan passport:install` and set in the .env file the CLIENT_ID and CLIENT_SECRET that you receive
-8. Add your own mailtrap.io credentials in MAIL_USERNAME and MAIL_PASSWORD in the .env file
-
-## Material React Frontend Installation
-
-1. Set up your api for the project
-2. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
-3. Navigate to the root ./ directory of the product and run `yarn install` or `npm install` to install our local dependencies.
-4. Add in your projeact an .env file with the variables
- - `REACT_APP_URL=your-react-project`
- - `REACT_APP_API_URL=the-path-of-the-api`
- - `REACT_APP_IS_DEMO=false` if you don't want any restrications and true in case you want to add restrictions
 
 ## Contact
 

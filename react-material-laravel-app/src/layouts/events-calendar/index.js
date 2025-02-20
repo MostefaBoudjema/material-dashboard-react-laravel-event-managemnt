@@ -44,6 +44,8 @@ function EventCalendar() {
     try {
       await EventService.joinEvent(token, currentEvent.id);
       setSuccessMessage("Successfully joined the event.");
+      const updatedEvents = await EventService.getEvents(token); // Fetch updated events
+      setEvents(updatedEvents);
       handleCloseDialog();
     } catch (error) {
       setErrorMessage(error.message||"Failed to join the event.");
