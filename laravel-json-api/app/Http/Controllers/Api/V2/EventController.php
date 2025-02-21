@@ -15,38 +15,28 @@ class EventController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $isAdmin = $user->hasRole('Admin');
 
-        if ($user->hasRole('Admin')) {
-            // $events = Event::withCount('participants')->get();
-            $events = Event::withCount('participants')
-                ->with(['participants' => function ($query) {
-                    $query->where('user_id', auth()->id());
-                }])
-                ->orderBy('date_time')
-                ->get()
-                ->map(function ($event) {
-                    $event->is_participating = $event->participants->isNotEmpty();
-                    unset($event->participants);
-                    return $event;
-                });
-        } else {
-            // $events = Event::where('status', 'published')->withCount('participants')->get();
-            $events = Event::where('status', 'published')
-                ->withCount('participants')
-                ->with(['participants' => function ($query) {
-                    $query->where('user_id', auth()->id());
-                }])
-                ->orderBy('date_time')
-                ->get()
-                ->map(function ($event) {
-                    $event->is_participating = $event->participants->isNotEmpty();
-                    unset($event->participants);
-                    return $event;
-                });
+        $eventsQuery = Event::withCount('participants')
+            ->with(['participants' => function ($query) {
+                $query->where('user_id', auth()->id());
+            }])
+            ->orderBy('date_time');
+
+        if (!$isAdmin) {
+            $eventsQuery->where('status', 'published');
         }
+
+        $events = $eventsQuery->get()->map(function ($event) use ($isAdmin) {
+            $event->is_participating = $event->participants->isNotEmpty();
+            $event->is_admin = $isAdmin; // Add is_admin property
+            unset($event->participants);
+            return $event;
+        });
 
         return response()->json($events);
     }
+
 
     // Show a single event
     public function show(Event $event)

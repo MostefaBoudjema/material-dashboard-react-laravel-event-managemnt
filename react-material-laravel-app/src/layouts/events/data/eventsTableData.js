@@ -4,7 +4,7 @@ import MDBadge from "components/MDBadge";
 import { Box, Divider } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-export default function eventsTableData(events, handleOpenDialog, handleDelete,handleJoin) {
+export default function eventsTableData(events, handleOpenDialog, handleDelete, handleJoin) {
   const Job=({ title }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
@@ -36,80 +36,87 @@ export default function eventsTableData(events, handleOpenDialog, handleDelete,h
       waitlist_capacity: <Job title={event.waitlist_capacity} />,
       status: (
         <MDBox ml={-1}>
-          <MDBadge badgeContent={event.status === 'published' ? 'live' : 'draft'} color={event.status === 'published' ? 'success' : 'secondary'} variant="gradient" size="sm" />
+          <MDBadge badgeContent={event.status==='published'? 'live':'draft'} color={event.status==='published'? 'success':'secondary'} variant="gradient" size="sm" />
         </MDBox>
       ),
       action: (
-        <MDBox display="flex" alignItems="center" lineHeight={1}>
+        <MDBox
+          display="flex"
+          alignItems="center"
+          justifyContent="end"
+          minWidth="120px" // Ensures consistent width
+        >
+          {!event.is_participating&&(
+            <>
+              <Box
+                sx={{
+                  backgroundColor: 'lightgreen',
+                  borderRadius: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '4px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleJoin(event.id)}
+              >
+                <MDTypography variant="caption" fontWeight="medium">
+                  Join
+                </MDTypography>
+              </Box>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            </>
+          )}
 
-          <Box
-            sx={{
-              backgroundColor: 'lightgreen',
-              color: 'light',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '4px',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleJoin(event.id)}
+          {event.is_admin&&( // Only show if user is admin
+            <>
+              <Box
+                sx={{
+                  backgroundColor: 'orange',
+                  borderRadius: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '4px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleOpenDialog(event)}
+              >
+                <EditIcon sx={{ fontSize: 18 }} />
+              </Box>
 
-          >
-            <MDTypography
-              component="a"
-              href="#"
-              variant="caption"
-              color=""
-              fontWeight="medium"
-            >
-              Join
-            </MDTypography>
-          </Box>
-          <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-          <Box
-            sx={{
-              backgroundColor: 'orange',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '4px',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleOpenDialog(event)}
-          >
-            <EditIcon sx={{ fontSize: 18 }} />
-          </Box>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
 
-          <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-
-          <Box
-            sx={{
-              backgroundColor: 'red',
-              color: 'light',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '4px',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleDelete(event)}
-          >
-            <DeleteIcon sx={{ fontSize: 18 }} />
-          </Box>
+              <Box
+                sx={{
+                  backgroundColor: 'red',
+                  borderRadius: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '4px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleDelete(event)}
+              >
+                <DeleteIcon sx={{ fontSize: 18 }} />
+              </Box>
+            </>
+          )}
         </MDBox>
       ),
-      is_participating: event.is_participating ? (
+
+
+
+      is_participating: event.is_participating? (
         <MDBadge badgeContent="Yes" color="success" variant="gradient" size="sm" />
-      ) : (
+      ):(
         <MDBadge badgeContent="No" color="error" variant="gradient" size="sm" />
       ),
       styles: {
-        backgroundColor: event.is_participating ? 'rgba(76, 175, 80, 0.2)' : 'inherit',
+        backgroundColor: event.is_participating? 'rgba(76, 175, 80, 0.2)':'inherit',
       },
     })),
-    
+
   };
 }

@@ -44,7 +44,7 @@ function EventCalendar() {
     try {
       await EventService.joinEvent(token, currentEvent.id);
       setSuccessMessage("Successfully joined the event.");
-      const updatedEvents = await EventService.getEvents(token); // Fetch updated events
+      const updatedEvents=await EventService.getEvents(token); // Fetch updated events
       setEvents(updatedEvents);
       handleCloseDialog();
     } catch (error) {
@@ -165,11 +165,11 @@ function EventCalendar() {
                     title: event.name,
                     start: new Date(event.date_time),
                     end: new Date(new Date(event.date_time).getTime()+event.duration*60000),
-                    is_participating: event.is_participating, 
+                    is_participating: event.is_participating,
                   }))}
                   eventPropGetter={(event) => ({
                     style: {
-                      backgroundColor: event.is_participating ? "#4caf50" : "#3174ad",
+                      backgroundColor: event.is_participating? "#4caf50":"#3174ad",
                       color: "white",
                     },
                   })}
@@ -232,24 +232,28 @@ function EventCalendar() {
             ))}
         </DialogContent>
         <DialogActions>
-
-          <Button variant="contained" color="success" onClick={handleFormSubmit}>
-            Save
-          </Button>
-          {currentEvent&&(
-            <Button variant="contained" color="error" onClick={handleDeleteEvent}>
-              Delete
-            </Button>
+          {currentEvent?.is_admin&&(
+            <>
+              <Button variant="contained" color="success" onClick={handleFormSubmit}>
+                Save
+              </Button>
+              <Button variant="contained" color="error" onClick={handleDeleteEvent}>
+                Delete
+              </Button>
+            </>
           )}
-          {currentEvent&&(
+
+          {!currentEvent?.is_participating&&(
             <Button variant="contained" color="success" onClick={handleJoinEvent}>
               Join
             </Button>
           )}
+
           <Button variant="contained" color="error" onClick={handleCloseDialog}>
             Cancel
           </Button>
         </DialogActions>
+
 
 
       </Dialog>
