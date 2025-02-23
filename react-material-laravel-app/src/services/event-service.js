@@ -33,6 +33,17 @@ class EventService {
             }
         });
     }
+    // cancel
+    cancelEvent=async (token,eventId) => {
+        // console.log(eventId);
+        const cancelEndpoint=`events/${eventId}/cancel`;
+        return await HttpService.post(cancelEndpoint, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+    }
 
     // create
     createEvent=async (token, eventData) => {

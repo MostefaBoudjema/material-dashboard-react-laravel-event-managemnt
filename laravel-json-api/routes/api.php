@@ -47,6 +47,7 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::get('/events/joined', [EventController::class, 'joinedEventsToday']);
     Route::resource('events', EventController::class);
     Route::post('/events/{eventId}/join', [EventParticipantController::class, 'join'])->middleware('event.capacity');
+    Route::post('/events/{eventId}/cancel', [EventParticipantController::class, 'cancel']);
     Route::post('/waitlist/{eventId}/join', [EventWaitlistController::class, 'joinWaitlist']);
 
 

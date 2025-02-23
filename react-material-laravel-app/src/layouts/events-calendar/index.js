@@ -57,6 +57,18 @@ function EventCalendar() {
       }, 5000);
     }
   };
+  const handleCancelEvent=async () => {
+    try {
+      await EventService.cancelEvent(token, currentEvent.id);
+      setSuccessMessage("Successfully Cancel Practicing in the event.");
+      const updatedEvents=await EventService.getEvents(token); // Fetch updated events
+      setEvents(updatedEvents);
+      handleCloseDialog();
+    } catch (error) {
+      setErrorMessage(error.message||"Failed to Cancel the event.");
+
+    }
+  };
 
 
   const handleDeleteEvent=async () => {
@@ -246,6 +258,11 @@ function EventCalendar() {
           {!currentEvent?.is_participating&&(
             <Button variant="contained" color="success" onClick={handleJoinEvent}>
               Join
+            </Button>
+          )}
+          {currentEvent?.is_participating&&(
+            <Button variant="contained" color="success" onClick={handleCancelEvent}>
+              Cancel Join
             </Button>
           )}
 

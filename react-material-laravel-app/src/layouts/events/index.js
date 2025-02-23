@@ -90,10 +90,11 @@ function Events() {
     }
   };
 
-  const handleJoin = async (eventId) => {
+  const handleJoin=async (eventId) => {
     try {
+      console.log('handleJoin');
       await EventService.joinEvent(token, eventId);
-      const updatedEvents = await EventService.getEvents(token);
+      const updatedEvents=await EventService.getEvents(token);
       setEvents(updatedEvents);
       setSuccessMessage("Joined successfully!");
       setTimeout(() => setSuccessMessage(""), 3000);
@@ -102,17 +103,29 @@ function Events() {
       setTimeout(() => {
         setErrorMessage("");
         if (error.status=='409') {
-          
-        navigate(`/waitlist/${eventId}`);
+
+          navigate(`/waitlist/${eventId}`);
         }
       }, 5000);
     }
   };
-  
+  const handleCancel=async (eventId) => {
+    try {
+      console.log('handleCancel');
+      await EventService.cancelEvent(token, eventId);
+      const updatedEvents=await EventService.getEvents(token);
+      setEvents(updatedEvents);
+      setSuccessMessage("Cancelled successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (error) {
+      setErrorMessage(error.message||"Failed to Cancelled practicing the event.");
+    }
+  };
 
 
 
-  const { columns, rows }=eventsTableData(events, handleOpenDialog, handleDelete, handleJoin);
+
+  const { columns, rows }=eventsTableData(events, handleOpenDialog, handleDelete, handleJoin, handleCancel);
 
   return (
     <DashboardLayout>

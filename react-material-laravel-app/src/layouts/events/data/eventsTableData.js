@@ -4,7 +4,7 @@ import MDBadge from "components/MDBadge";
 import { Box, Divider } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-export default function eventsTableData(events, handleOpenDialog, handleDelete, handleJoin) {
+export default function eventsTableData(events, handleOpenDialog, handleDelete, handleJoin, handleCancel) {
   const Job=({ title }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
@@ -46,6 +46,27 @@ export default function eventsTableData(events, handleOpenDialog, handleDelete, 
           justifyContent="end"
           minWidth="120px" // Ensures consistent width
         >
+          {event.is_participating&&(
+            <>
+              <Box
+                sx={{
+                  backgroundColor: 'lightcoral',
+                  borderRadius: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '4px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleCancel(event.id)}
+              >
+                <MDTypography variant="caption" fontWeight="medium">
+                  Cancel
+                </MDTypography>
+              </Box>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            </>
+          )}
           {!event.is_participating&&(
             <>
               <Box

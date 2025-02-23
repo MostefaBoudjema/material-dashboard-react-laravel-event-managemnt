@@ -31,12 +31,13 @@ class EventParticipantController extends Controller
 
         $eventStart = Carbon::parse($event->date_time);
         $eventEnd = $eventStart->copy()->addMinutes($event->duration);
-        
+
         foreach ($userEvents as $userEvent) {
             $userEventStart = Carbon::parse($userEvent->date_time);
             $userEventEnd = $userEventStart->copy()->addMinutes($userEvent->duration);
-        
-            if ($eventStart->isSameDay($userEventStart) &&
+
+            if (
+                $eventStart->isSameDay($userEventStart) &&
                 $eventStart->lt($userEventEnd) &&
                 $eventEnd->gt($userEventStart)
             ) {
@@ -45,7 +46,7 @@ class EventParticipantController extends Controller
                 ], 409);
             }
         }
-        
+
 
         $participation = EventParticipant::create([
             'user_id' => auth()->id(),
@@ -57,6 +58,18 @@ class EventParticipantController extends Controller
         return response()->json(['message' => 'Participation recorded successfully', 'data' => $participation]);
     }
 
+    public function cancel(Request $request, $eventId)
+    {
+        $participation = EventParticipant::where('user_id', auth()->id())
+            ->where('event_id', $eventId)
+            ->first();
 
+        if (!$participation) {
+            return response()->json(['message' => 'You are not participating in this event'], 404);
+        }
 
+        $participation->delete();
+
+        return response()->json(['message' => 'Participation canceled successfully']);
+    }
 }
