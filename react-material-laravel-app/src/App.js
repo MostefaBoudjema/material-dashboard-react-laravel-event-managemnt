@@ -181,7 +181,7 @@ export default function App() {
           />
           <meta
             itemProp="name"
-            content="React Material Dashboard Laravel by Creative Tim & UPDIVISION"
+            content="Event Management Material Dashboard"
           />
           <meta
             itemProp="description"
@@ -195,7 +195,7 @@ export default function App() {
           <meta name="twitter:site" content="@creativetim" />
           <meta
             name="twitter:title"
-            content="React Material Dashboard Laravel by Creative Tim & UPDIVISION"
+            content="Event Management Material Dashboard"
           />
           <meta
             name="twitter:description"
@@ -209,7 +209,7 @@ export default function App() {
           <meta property="fb:app_id" content="655968634437471" />
           <meta
             property="og:title"
-            content="React Material Dashboard Laravel by Creative Tim & UPDIVISION"
+            content="Event Management Material Dashboard"
           />
           <meta property="og:type" content="article" />
           <meta

@@ -17,6 +17,10 @@ class EventParticipantController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
+        if (Carbon::parse($event->date_time)->isPast()) {
+            return response()->json(['message' => 'You cannot participate in a past event'], 400);
+        }
+
         $existingParticipation = EventParticipant::where('user_id', auth()->id())
             ->where('event_id', $event->id)
             ->exists();

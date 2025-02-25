@@ -44,6 +44,7 @@ class MeController extends Controller
             $responseHeaders = $this->parseHeaders($response->getHeaders());
 
             unset($responseHeaders['Transfer-Encoding']);
+            // $responseBody['data']['attributes']['role'] = auth()->user()->role;
 
             return response()->json($responseBody, $responseStatus)->withHeaders($responseHeaders);
         } catch (ClientException $e) {

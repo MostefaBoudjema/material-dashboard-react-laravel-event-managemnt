@@ -80,5 +80,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class);
     }
+
+
+
     
 }

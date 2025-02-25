@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V2\EventRequest;
 use App\Models\Event;
 use App\Models\EventParticipant;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -30,6 +31,7 @@ class EventController extends Controller
         $events = $eventsQuery->get()->map(function ($event) use ($isAdmin) {
             $event->is_participating = $event->participants->isNotEmpty();
             $event->is_admin = $isAdmin; // Add is_admin property
+            $event->is_past = Carbon::parse($event->date_time)->isPast(); // Check if event is in the past
             unset($event->participants);
             return $event;
         });
@@ -47,6 +49,13 @@ class EventController extends Controller
     // Create a new event
     public function store(EventRequest $request)
     {
+        // dd(auth()->user()->getRoleNames()); 
+        // return response()->json(auth()->user()->getRoleNames());
+
+        if (!collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin')) {
+            return response()->json(['message' => 'You don\'t have permission to create'], 409);
+        }
+        
         $event = Event::create($request->validated());
 
         return response()->json(['message' => 'Event created successfully', 'event' => $event], 201);
@@ -56,6 +65,10 @@ class EventController extends Controller
     // Update an existing event
     public function update(EventRequest $request, Event $event)
     {
+        if (!collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin')) {
+            return response()->json(['message' => 'You don\'t have permission to update'], 409);
+        }
+        
         // Update event data
         $event->update($request->all());
 
@@ -65,6 +78,10 @@ class EventController extends Controller
     // Delete an event
     public function destroy(Event $event)
     {
+        
+        if (!collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin')) {
+            return response()->json(['message' => 'You don\'t have permission to delete'], 409);
+        }
         $event->delete();
         return response()->json(['message' => 'Event deleted successfully']);
     }

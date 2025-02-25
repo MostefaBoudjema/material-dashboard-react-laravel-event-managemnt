@@ -146,9 +146,10 @@ function Events() {
               >
                 <Grid container justifyContent="space-between" alignItems="center">
                   <MDTypography variant="h6" color="white">Events Table</MDTypography>
-                  {/* <Button variant="contained" color="white" onClick={() => handleOpenDialog(null)}>
-                    New Event
-                  </Button> */}
+                  
+                    <Button variant="contained" color="white" onClick={() => handleOpenDialog(null)}>
+                      New Event
+                    </Button>
                 </Grid>
               </MDBox>
 

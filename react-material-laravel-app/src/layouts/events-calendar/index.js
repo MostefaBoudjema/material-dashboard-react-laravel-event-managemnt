@@ -17,6 +17,7 @@ const localizer=momentLocalizer(moment);
 function EventCalendar() {
   const token=localStorage.getItem('token');
   const [events, setEvents]=useState([]);
+  const [isAdmin, setisAdmin]=useState(false);
   const [openDialog, setOpenDialog]=useState(false);
   const [currentEvent, setCurrentEvent]=useState(null);
   const [errorMessage, setErrorMessage]=useState("");
@@ -113,12 +114,12 @@ function EventCalendar() {
   const handleFormSubmit=async () => {
     try {
       if (currentEvent) {
-        await EventService.updateEvent(token, currentEvent.id, formData);
-        setSuccessMessage("Event updated successfully.");
+        const responsMsg = await EventService.updateEvent(token, currentEvent.id, formData);
+        setSuccessMessage(responsMsg.message||"Event updated successfully.");
       } else {
 
-        await EventService.createEvent(token, formData);
-        setSuccessMessage("Event created successfully.");
+        const responsMsg = await EventService.createEvent(token, formData);
+        setSuccessMessage(responsMsg.message||"Event Created successfully.");
       }
       const updatedEvents=await EventService.getEvents(token);
       setEvents(updatedEvents);
@@ -178,6 +179,8 @@ function EventCalendar() {
                     start: new Date(event.date_time),
                     end: new Date(new Date(event.date_time).getTime()+event.duration*60000),
                     is_participating: event.is_participating,
+                    is_past: event.is_past,
+                    is_admin: event.is_admin,
                   }))}
                   eventPropGetter={(event) => ({
                     style: {
@@ -244,7 +247,7 @@ function EventCalendar() {
             ))}
         </DialogContent>
         <DialogActions>
-          {currentEvent?.is_admin&&(
+          {/* {currentEvent?.is_admin&&(
             <>
               <Button variant="contained" color="success" onClick={handleFormSubmit}>
                 Save
@@ -253,14 +256,22 @@ function EventCalendar() {
                 Delete
               </Button>
             </>
-          )}
+          )} */}
+            <>
+              <Button variant="contained" color="success" onClick={handleFormSubmit}>
+                Save
+              </Button>
+              <Button variant="contained" color="error" onClick={handleDeleteEvent}>
+                Delete
+              </Button>
+            </>
 
-          {!currentEvent?.is_participating&&(
+          {!currentEvent?.is_past&&!currentEvent?.is_participating&&(
             <Button variant="contained" color="success" onClick={handleJoinEvent}>
               Join
             </Button>
           )}
-          {currentEvent?.is_participating&&(
+          {currentEvent?.is_past&&currentEvent?.is_participating&&(
             <Button variant="contained" color="success" onClick={handleCancelEvent}>
               Cancel Join
             </Button>

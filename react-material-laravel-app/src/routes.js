@@ -1,19 +1,9 @@
 
 // Material Dashboard 2 React layouts
-import Dashboard from "layouts/dashboard";
 import Empty from "layouts/empty";
 
-import Tables from "layouts/tables";
 import Events from "layouts/events";
-import Billing from "layouts/billing";
-import RTL from "layouts/rtl";
-import Notifications from "layouts/notifications";
-import Profile from "layouts/profile";
-import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
 
-import UserProfile from "layouts/user-profile";
-import UserManagement from "layouts/user-management";
 
 import Login from "auth/login";
 import Register from "auth/register";
@@ -24,10 +14,12 @@ import ResetPassword from "auth/reset-password";
 import Icon from "@mui/material/Icon";
 import Waitlist from "layouts/waitlist";
 import EventCalendar from "layouts/events-calendar";
+import Users from "layouts/users";
+import Roles from "layouts/roles";
 
-const routes = [
+const routes=[
   {
-    type: "collapse",
+    type: "collapse2",
     name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
@@ -35,30 +27,6 @@ const routes = [
     component: <Empty />,
   },
 
-  // {
-  //   type: "collapse",
-  //   name: "Dashboard",
-  //   key: "dashboard",
-  //   icon: <Icon fontSize="small">dashboard</Icon>,
-  //   route: "/dashboard",
-  //   component: <Dashboard />,
-  // },
-  // {
-  //   type: "collapse",
-  //   name: "Empty",
-  //   key: "empty",
-  //   icon: <Icon fontSize="small">article</Icon>,
-  //   route: "/empty",
-  //   component: <Empty />,
-  // },
-  // {
-  //   type: "collapse",
-  //   name: "Tables",
-  //   key: "tables",
-  //   icon: <Icon fontSize="small">table_view</Icon>,
-  //   route: "/tables",
-  //   component: <Tables />,
-  // },
   {
     type: "collapse",
     name: "Events Table",
@@ -76,71 +44,28 @@ const routes = [
     component: <EventCalendar />,
   },
   // {
-  //   type: "collapse",
-  //   name: "Billing",
-  //   key: "billing",
-  //   icon: <Icon fontSize="small">receipt_long</Icon>,
-  //   route: "/billing",
-  //   component: <Billing />,
-  // },
-  // {
-  //   type: "collapse",
-  //   name: "RTL",
-  //   key: "rtl",
-  //   icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-  //   route: "/rtl",
-  //   component: <RTL />,
-  // },
-  // {
-  //   type: "collapse",
-  //   name: "Notifications",
-  //   key: "notifications",
-  //   icon: <Icon fontSize="small">notifications</Icon>,
-  //   route: "/notifications",
-  //   component: <Notifications />,
-  // },
-  // {
-  //   type: "collapse",
-  //   name: "Profile",
-  //   key: "profile",
-  //   icon: <Icon fontSize="small">person</Icon>,
-  //   route: "/profile",
-  //   component: <Profile />,
-  // },
-  // {
-  //   type: "collapse",
-  //   name: "Sign In",
-  //   key: "sign-in",
-  //   icon: <Icon fontSize="small">login</Icon>,
-  //   route: "/authentication/sign-in",
-  //   component: <SignIn />,
+  //   type: "divider",
   // },
 
-  
+
   // {
   //   type: "collapse",
-  //   name: "Sign Up",
-  //   key: "sign-up",
-  //   icon: <Icon fontSize="small">assignment</Icon>,
-  //   route: "/authentication/sign-up",
-  //   component: <SignUp />,
+  //   name: "Users",
+  //   key: "users",
+  //   icon: <Icon fontSize="small">manage_accounts</Icon>,
+  //   route: "/users",
+  //   component: <Users />,
   // },
+
   // {
-  //   type: "examples",
-  //   name: "User Profile",
-  //   key: "user-profile",
-  //   icon: <Icon fontSize="small">person</Icon>,
-  //   route: "/user-profile",
-  //   component: <UserProfile />,
+  //   type: "collapse",
+  //   name: "Roles",
+  //   key: "roles",
+  //   icon: <Icon fontSize="small">people</Icon>,
+  //   route: "/roles",
+  //   component: <Roles />,
   // },
-  // {
-  //   type: "examples",
-  //   name: "User Management",
-  //   key: "user-management",
-  //   icon: <Icon fontSize="small">list</Icon>,
-  //   route: "/user-management",
-  //   component: <UserManagement />,
-  // },
+
   {
     type: "auth",
     name: "Login",
@@ -181,32 +106,13 @@ const routes = [
     route: "/waitlist/:eventId",
     component: <Waitlist />,
   },
-  
+
 ];
 
 export default routes;
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
 /** 
-  All of the routes for the Material Dashboard 2 React are added here,
-  You can add a new route, customize the routes and delete the routes here.
-
-  Once you add a new route on this file it will be visible automatically on
-  the Sidenav  .
-
   For adding a new route you can follow the existing routes in the routes array.
   1. The `type` key with the `collapse` value is used for a route.
   2. The `type` key with the `title` value is used for a title inside the Sidenav. 

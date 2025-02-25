@@ -46,7 +46,7 @@ export default function eventsTableData(events, handleOpenDialog, handleDelete, 
           justifyContent="end"
           minWidth="120px" // Ensures consistent width
         >
-          {event.is_participating&&(
+          {!event.is_past&&event.is_participating&&(
             <>
               <Box
                 sx={{
@@ -67,7 +67,7 @@ export default function eventsTableData(events, handleOpenDialog, handleDelete, 
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
             </>
           )}
-          {!event.is_participating&&(
+          {!event.is_past&&!event.is_participating&&(
             <>
               <Box
                 sx={{
@@ -88,6 +88,7 @@ export default function eventsTableData(events, handleOpenDialog, handleDelete, 
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
             </>
           )}
+
 
           {event.is_admin&&( // Only show if user is admin
             <>
