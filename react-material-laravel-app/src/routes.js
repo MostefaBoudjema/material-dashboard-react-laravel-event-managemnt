@@ -1,23 +1,19 @@
-
-// Material Dashboard 2 React layouts
+// routes.js
 import Empty from "layouts/empty";
-
 import Events from "layouts/events";
-
-
 import Login from "auth/login";
 import Register from "auth/register";
 import ForgotPassword from "auth/forgot-password";
 import ResetPassword from "auth/reset-password";
-
-// @mui icons
 import Icon from "@mui/material/Icon";
 import Waitlist from "layouts/waitlist";
 import EventCalendar from "layouts/events-calendar";
 import Users from "layouts/users";
 import Roles from "layouts/roles";
+import Payment from "layouts/payment";
 
-const routes=[
+// Function to generate routes based on isAdmin
+const getRoutes = (isAdmin) => [
   {
     type: "collapse2",
     name: "Dashboard",
@@ -26,7 +22,10 @@ const routes=[
     route: "/dashboard",
     component: <Empty />,
   },
-
+  {
+    type: "title",
+    title: "Event Management",
+  },
   {
     type: "collapse",
     name: "Events Table",
@@ -43,29 +42,44 @@ const routes=[
     route: "/events-calendar",
     component: <EventCalendar />,
   },
+  {
+    type: "title",
+    title: "Payments",
+  },
+  {
+    type: "collapse",
+    name: "Stripe Payment",
+    key: "stripe-payment",
+    icon: <Icon fontSize="small">payment</Icon>,
+    route: "/stripe-payment",
+    component: <Payment />,
+  },
   // {
-  //   type: "divider",
+  //   type: "dividerAdmin",
   // },
-
-
   // {
-  //   type: "collapse",
+  //   type: "titleAdmin",
+  //   title: "User Management",
+  //   isAdmin: isAdmin, // Pass isAdmin dynamically
+  // },
+  // {
+  //   type: "admin",
   //   name: "Users",
   //   key: "users",
   //   icon: <Icon fontSize="small">manage_accounts</Icon>,
   //   route: "/users",
+  //   isAdmin: isAdmin, // Pass isAdmin dynamically
   //   component: <Users />,
   // },
-
   // {
-  //   type: "collapse",
+  //   type: "admin",
   //   name: "Roles",
   //   key: "roles",
   //   icon: <Icon fontSize="small">people</Icon>,
   //   route: "/roles",
+  //   isAdmin: isAdmin, // Pass isAdmin dynamically
   //   component: <Roles />,
   // },
-
   {
     type: "auth",
     name: "Login",
@@ -106,24 +120,6 @@ const routes=[
     route: "/waitlist/:eventId",
     component: <Waitlist />,
   },
-
 ];
 
-export default routes;
-
-
-/** 
-  For adding a new route you can follow the existing routes in the routes array.
-  1. The `type` key with the `collapse` value is used for a route.
-  2. The `type` key with the `title` value is used for a title inside the Sidenav. 
-  3. The `type` key with the `divider` value is used for a divider between Sidenav items.
-  4. The `name` key is used for the name of the route on the Sidenav.
-  5. The `key` key is used for the key of the route (It will help you with the key prop inside a loop).
-  6. The `icon` key is used for the icon of the route on the Sidenav, you have to add a node.
-  7. The `collapse` key is used for making a collapsible item on the Sidenav that has other routes
-  inside (nested routes), you need to pass the nested routes inside an array as a value for the `collapse` key.
-  8. The `route` key is used to store the route location which is used for the react router.
-  9. The `href` key is used to store the external links location.
-  10. The `title` key is only for the item with the type of `title` and its used for the title text on the Sidenav.
-  10. The `component` key is used to store the component of its route.
-*/
+export default getRoutes;

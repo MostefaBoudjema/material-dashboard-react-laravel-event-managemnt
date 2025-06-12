@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V2\MeController;
 use App\Http\Controllers\Api\V2\RoleController;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
+use App\Http\Controllers\Api\V2\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,6 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::post('/events/{eventId}/join', [EventParticipantController::class, 'join'])->middleware('event.capacity');
     Route::post('/events/{eventId}/cancel', [EventParticipantController::class, 'cancel']);
     Route::post('/waitlist/{eventId}/join', [EventWaitlistController::class, 'joinWaitlist']);
-
+    Route::post('/payments/intent', [PaymentController::class, 'createPaymentIntent'])->middleware('auth:api');
 
 });

@@ -81,7 +81,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class);
     }
 
-
+    public function isAdmin(): bool
+    {
+        return $this->getRoleNames()->map(fn($role) => strtolower($role))->contains('admin');
+    }
+    
 
     
 }

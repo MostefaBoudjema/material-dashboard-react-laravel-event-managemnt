@@ -16,21 +16,30 @@ Coded by www.creative-tim.com
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import App from "App";
 import { AuthContextProvider } from "context";
 
-// Material Dashboard 2 React Context  Provider
+// Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "context";
+
+// Replace with your actual Stripe publishable key
+const stripePromise = loadStripe('pk_test_mXfJqtZTInlsrn7rwJpoowaY00314kXwId');
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
 root.render(
-  <BrowserRouter>
-    <AuthContextProvider>
-      <MaterialUIControllerProvider>
-        <App />
-      </MaterialUIControllerProvider>
-    </AuthContextProvider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthContextProvider>
+        <MaterialUIControllerProvider>
+          <Elements stripe={stripePromise}>
+            <App />
+          </Elements>
+        </MaterialUIControllerProvider>
+      </AuthContextProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
