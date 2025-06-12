@@ -44,7 +44,7 @@ class MeController extends Controller
             $responseHeaders = $this->parseHeaders($response->getHeaders());
 
             unset($responseHeaders['Transfer-Encoding']);
-            // $responseBody['data']['attributes']['role'] = auth()->user()->role;
+            $responseBody['is_admin']= collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin');
 
             return response()->json($responseBody, $responseStatus)->withHeaders($responseHeaders);
         } catch (ClientException $e) {

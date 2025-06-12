@@ -42,6 +42,7 @@ import {
 import MDButton from "components/MDButton";
 import { AuthContext } from "context";
 import { Badge } from "@mui/material";
+import MDTypography from "components/MDTypography";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const authContext=useContext(AuthContext);
@@ -95,6 +96,23 @@ function DashboardNavbar({ absolute, light, isMini }) {
     fetchJoinedEvents();
   }, []);
 
+  const [user, setUser]=useState(null);
+
+  useEffect(() => {
+    const fetchUser=async () => {
+      try {
+        const userData=await AuthService.getProfile();
+        setUser(userData); 
+        // console.log(authContext);
+      } catch (error) {
+        console.error("Failed to fetch user profile", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+
   const handleMiniSidenav=() => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen=() => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu=(event) => setOpenMenu(event.currentTarget);
@@ -106,7 +124,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       {joinedEvents.length>0? (
         joinedEvents.map((joinedEvent) => {
           const eventDate=new Date(joinedEvent.event.date_time);
-          const formattedTime = eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const formattedTime=eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 
           return (
@@ -200,6 +218,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
               </IconButton>
 
               {renderMenu()}
+
+
+              <MDTypography variant="h6" color="dark" sx={{ mr: 2 }}>
+                {user?.name}
+              </MDTypography>
+
               <MDBox>
                 <MDButton
                   variant="gradient"

@@ -15,9 +15,11 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Grid from "@mui/material/Grid";
+import { Card } from "@mui/material";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -31,13 +33,39 @@ import PaymentMethod from "layouts/billing/components/PaymentMethod";
 import Invoices from "layouts/billing/components/Invoices";
 import BillingInformation from "layouts/billing/components/BillingInformation";
 import Transactions from "layouts/billing/components/Transactions";
+import PaymentForm from "layouts/billing/components/PaymentForm";
 
 function Billing() {
   return (
     <DashboardLayout>
       <DashboardNavbar absolute isMini />
       <MDBox mt={8}>
-        <MDBox mb={3}>
+      <MDBox pt={6} pb={3}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Card>
+                <MDBox
+                  mx={2}
+                  mt={-3}
+                  py={3}
+                  px={2}
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="info"
+                >
+                  <MDTypography variant="h6" color="white">
+                    Payment Information
+                  </MDTypography>
+                </MDBox>
+                <MDBox pt={4} pb={3} px={3}>
+                  <PaymentForm />
+                </MDBox>
+              </Card>
+            </Grid>
+          </Grid>
+        </MDBox>
+        {/* <MDBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={8}>
               <Grid container spacing={3}>
@@ -79,9 +107,10 @@ function Billing() {
               <Transactions />
             </Grid>
           </Grid>
-        </MDBox>
+        </MDBox> */}
+        
       </MDBox>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

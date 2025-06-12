@@ -1,45 +1,34 @@
-import { useEffect } from "react";
-
-// react-router-dom components
+// sidenav.js
+import { useEffect, useState } from "react";
 import { useLocation, NavLink } from "react-router-dom";
-
-// prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
-
-// @mui material components
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Icon from "@mui/material/Icon";
-
-// Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDButton from "components/MDButton";
-
-// Material Dashboard 2 React example components
 import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
-
-// Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
-
-// Material Dashboard 2 React context
 import {
   useMaterialUIController,
   setMiniSidenav,
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
+import authService from "services/auth-service";
+import getRoutes from "routes"; // Import the function instead of the static array
 
-function Sidenav({ color, brand, brandName, routes, ...rest }) {
+function Sidenav({ color, brand, brandName, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
+  const [isAdmin, setIsAdmin] = useState(false); // State to hold admin status
+  const [routes, setRoutes] = useState([]); // State to hold dynamic routes
 
   let textColor = "white";
-
   if (transparentSidenav || (whiteSidenav && !darkMode)) {
     textColor = "dark";
   } else if (whiteSidenav && darkMode) {
@@ -48,109 +37,112 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
 
+  // Fetch isAdmin from authService when the component mounts
   useEffect(() => {
-    // A function that sets the mini state of the sidenav.
+    const fetchUserAdminStatus = async () => {
+      try {
+        const user = await authService.getProfile(); 
+        const adminStatus = user?.is_admin || false; 
+        setIsAdmin(adminStatus);
+        setRoutes(getRoutes(adminStatus)); 
+      } catch (error) {
+        console.error("Failed to fetch user admin status:", error);
+        setIsAdmin(false);
+        setRoutes(getRoutes(false)); 
+      }
+    };
+
+    fetchUserAdminStatus();
+  }, []);
+
+  useEffect(() => {
     function handleMiniSidenav() {
       setMiniSidenav(dispatch, window.innerWidth < 1200);
-      setTransparentSidenav(dispatch, window.innerWidth < 1200 ? false : transparentSidenav);
+      setTransparentSidenav(
+        dispatch,
+        window.innerWidth < 1200 ? false : transparentSidenav
+      );
       setWhiteSidenav(dispatch, window.innerWidth < 1200 ? false : whiteSidenav);
     }
 
-    /**
-     The event listener that's calling the handleMiniSidenav function when resizing the window.
-    */
     window.addEventListener("resize", handleMiniSidenav);
-
-    // Call the handleMiniSidenav function to set the state with the initial value.
     handleMiniSidenav();
 
-    // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleMiniSidenav);
   }, [dispatch, location]);
 
-  // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
-    let returnValue;
+  // Render routes dynamically
+  const renderRoutes = routes.map(
+    ({ type, name, icon, title, noCollapse, key, href, route, isAdmin: routeIsAdmin }) => {
+      const shouldRender =
+        type === "titleAdmin" || type === "dividerAdmin" || type === "admin"
+          ? isAdmin
+          : true;
 
-    if (type === "collapse") {
-      returnValue = href ? (
-        <Link
-          href={href}
-          key={key}
-          target="_blank"
-          rel="noreferrer"
-          sx={{ textDecoration: "none" }}
-        >
-          <SidenavCollapse
-            name={name}
-            icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
-          />
-        </Link>
-      ) : (
-        <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
-        </NavLink>
-      );
-    } else if (type === "title") {
-      returnValue = (
-        <MDTypography
-          key={key}
-          color={textColor}
-          display="block"
-          variant="caption"
-          fontWeight="bold"
-          textTransform="uppercase"
-          pl={3}
-          mt={2}
-          mb={1}
-          ml={1}
-        >
-          {title}
-        </MDTypography>
-      );
-    } else if (type === "divider") {
-      returnValue = (
-        <Divider
-          key={key}
-          light={
-            (!darkMode && !whiteSidenav && !transparentSidenav) ||
-            (darkMode && !transparentSidenav && whiteSidenav)
-          }
-        />
-      );
-    }
-    return returnValue;
-  });
+      if (!shouldRender) return null;
 
-  const renderExampleRoutes = routes.map(
-    ({ type, name, icon, title, noCollapse, key, href, route }) => {
-      let returnValue;
+      switch (type) {
+        case "collapse":
+        case "admin":
+          return href ? (
+            <Link
+              href={href}
+              key={key}
+              target="_blank"
+              rel="noreferrer"
+              sx={{ textDecoration: "none" }}
+            >
+              <SidenavCollapse
+                name={name}
+                icon={icon}
+                active={key === collapseName}
+                noCollapse={noCollapse}
+              />
+            </Link>
+          ) : (
+            <NavLink key={key} to={route}>
+              <SidenavCollapse
+                name={name}
+                icon={icon}
+                active={key === collapseName}
+              />
+            </NavLink>
+          );
 
-      if (type === "examples") {
-        returnValue = href ? (
-          <Link
-            href={href}
-            key={key}
-            target="_blank"
-            rel="noreferrer"
-            sx={{ textDecoration: "none" }}
-          >
-            <SidenavCollapse
-              name={name}
-              icon={icon}
-              active={key === collapseName}
-              noCollapse={noCollapse}
+        case "title":
+        case "titleAdmin":
+          return (
+            <MDTypography
+              key={key}
+              color={textColor}
+              display="block"
+              variant="caption"
+              fontWeight="bold"
+              textTransform="uppercase"
+              pl={3}
+              mt={2}
+              mb={1}
+              ml={1}
+            >
+              {title}
+            </MDTypography>
+          );
+
+        case "divider":
+        case "dividerAdmin":
+          return (
+            <Divider
+              key={key}
+              light={
+                (!darkMode && !whiteSidenav && !transparentSidenav) ||
+                (darkMode && !transparentSidenav && whiteSidenav)
+              }
             />
-          </Link>
-        ) : (
-          <NavLink key={key} to={route}>
-            <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
-          </NavLink>
-        );
+          );
+
+        default:
+          return null;
       }
-      return returnValue;
     }
   );
 
@@ -180,7 +172,12 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             width={!brandName && "100%"}
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
           >
-            <MDTypography component="h6" variant="button" fontWeight="medium" color={textColor}>
+            <MDTypography
+              component="h6"
+              variant="button"
+              fontWeight="medium"
+              color={textColor}
+            >
               {brandName}
             </MDTypography>
           </MDBox>
@@ -192,38 +189,28 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           (darkMode && !transparentSidenav && whiteSidenav)
         }
       />
-      <List>
-        {/* <MDBox display="flex flex-col" alignItems="center">
-          <MDTypography color={textColor} variant="body2" fontWeight="medium" pl="1.5rem">
-            Examples
-          </MDTypography>
-          {renderExampleRoutes}
-        </MDBox>
-        <Divider
-          light={
-            (!darkMode && !whiteSidenav && !transparentSidenav) ||
-            (darkMode && !transparentSidenav && whiteSidenav)
-          }
-        ></Divider> */}
-        {renderRoutes}
-      </List>
-
+      <List>{renderRoutes}</List>
     </SidenavRoot>
   );
 }
 
-// Setting default values for the props of Sidenav
 Sidenav.defaultProps = {
   color: "info",
   brand: "",
 };
 
-// Typechecking props for the Sidenav
 Sidenav.propTypes = {
-  color: PropTypes.oneOf(["primary", "secondary", "info", "success", "warning", "error", "dark"]),
+  color: PropTypes.oneOf([
+    "primary",
+    "secondary",
+    "info",
+    "success",
+    "warning",
+    "error",
+    "dark",
+  ]),
   brand: PropTypes.string,
   brandName: PropTypes.string.isRequired,
-  routes: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Sidenav;

@@ -49,13 +49,11 @@ class EventController extends Controller
     // Create a new event
     public function store(EventRequest $request)
     {
-        // dd(auth()->user()->getRoleNames()); 
-        // return response()->json(auth()->user()->getRoleNames());
 
-        if (!collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin')) {
+        if (!auth()->user()->isAdmin()) {
             return response()->json(['message' => 'You don\'t have permission to create'], 409);
         }
-        
+
         $event = Event::create($request->validated());
 
         return response()->json(['message' => 'Event created successfully', 'event' => $event], 201);
@@ -65,10 +63,11 @@ class EventController extends Controller
     // Update an existing event
     public function update(EventRequest $request, Event $event)
     {
-        if (!collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin')) {
+        // if (!collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin')) {
+        if (!auth()->user()->isAdmin()) {
             return response()->json(['message' => 'You don\'t have permission to update'], 409);
         }
-        
+
         // Update event data
         $event->update($request->all());
 
@@ -78,8 +77,9 @@ class EventController extends Controller
     // Delete an event
     public function destroy(Event $event)
     {
-        
-        if (!collect(auth()->user()->getRoleNames())->map(fn($role) => strtolower($role))->contains('admin')) {
+
+
+        if (!auth()->user()->isAdmin()) {
             return response()->json(['message' => 'You don\'t have permission to delete'], 409);
         }
         $event->delete();
