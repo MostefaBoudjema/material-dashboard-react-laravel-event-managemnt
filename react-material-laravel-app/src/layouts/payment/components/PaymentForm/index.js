@@ -59,7 +59,7 @@ const PaymentForm = () => {
       // Call your Laravel backend to create a Payment Intent
       const response = await axios.post('/payments/intent', 
         {
-          amount: Math.round(parseFloat(amount) * 100), // Convert to cents
+          amount: Math.round(parseFloat(amount) ), // Convert to cents
           currency: 'usd',
         },
         {
