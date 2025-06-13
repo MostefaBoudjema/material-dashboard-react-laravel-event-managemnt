@@ -8,7 +8,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import MDInput from "components/MDInput";
 
-const PaymentForm = () => {
+const PaymentForm = ({ onPaymentSuccess }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
@@ -100,6 +100,10 @@ const PaymentForm = () => {
         // Clear the form
         cardElement.clear();
         setAmount('');
+        // Call the callback to refresh the payment list
+        if (onPaymentSuccess) {
+          onPaymentSuccess();
+        }
       }
     } catch (err) {
       console.error('Payment error:', err);

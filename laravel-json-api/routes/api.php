@@ -57,6 +57,10 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::post('/events/{eventId}/cancel', [EventParticipantController::class, 'cancel']);
     Route::post('/waitlist/{eventId}/join', [EventWaitlistController::class, 'joinWaitlist']);
     Route::post('/payments/intent', [PaymentController::class, 'createPaymentIntent'])->middleware('auth:api');
+    Route::get('/payments', [PaymentController::class, 'index'])->middleware('auth:api');
+    Route::get('/payments/{id}', [PaymentController::class, 'show'])->middleware('auth:api');
+    Route::delete('/payments/{id}', [PaymentController::class, 'destroy'])->middleware('auth:api');
+    Route::put('/payments/{id}', [PaymentController::class, 'update'])->middleware('auth:api');
     
     Route::post('/whatsapp/send', [WhatsAppController::class, 'sendMessage'])->middleware('auth:api');
 });

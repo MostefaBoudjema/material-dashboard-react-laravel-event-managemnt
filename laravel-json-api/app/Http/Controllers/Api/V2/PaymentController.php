@@ -18,6 +18,125 @@ class PaymentController extends Controller
     }
 
     /**
+     * Get all payments for the authenticated user
+     */
+    public function index()
+    {
+        try {
+            $payments = PaymentHistory::where('user_id', auth()->id())
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json($payments);
+        } catch (\Exception $e) {
+            Log::error('Error fetching payments: ' . $e->getMessage(), [
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to fetch payments'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get a specific payment
+     */
+    public function show($id)
+    {
+        try {
+            $payment = PaymentHistory::where('user_id', auth()->id())
+                ->where('id', $id)
+                ->first();
+
+            if (!$payment) {
+                return response()->json([
+                    'error' => 'Payment not found'
+                ], 404);
+            }
+
+            return response()->json($payment);
+        } catch (\Exception $e) {
+            Log::error('Error fetching payment: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'payment_id' => $id
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to fetch payment'
+            ], 500);
+        }
+    }
+
+    /**
+     * Update a payment
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $payment = PaymentHistory::where('user_id', auth()->id())
+                ->where('id', $id)
+                ->first();
+
+            if (!$payment) {
+                return response()->json([
+                    'error' => 'Payment not found'
+                ], 404);
+            }
+
+            // Only allow updating certain fields
+            $allowedFields = ['status', 'metadata'];
+            $updateData = array_intersect_key($request->all(), array_flip($allowedFields));
+
+            $payment->update($updateData);
+
+            return response()->json($payment);
+        } catch (\Exception $e) {
+            Log::error('Error updating payment: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'payment_id' => $id
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to update payment'
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a payment
+     */
+    public function destroy($id)
+    {
+        try {
+            $payment = PaymentHistory::where('user_id', auth()->id())
+                ->where('id', $id)
+                ->first();
+
+            if (!$payment) {
+                return response()->json([
+                    'error' => 'Payment not found'
+                ], 404);
+            }
+
+            $payment->delete();
+
+            return response()->json([
+                'message' => 'Payment deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deleting payment: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'payment_id' => $id
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to delete payment'
+            ], 500);
+        }
+    }
+
+    /**
      * Create a Stripe Payment Intent
      */
     public function createPaymentIntent(Request $request)
