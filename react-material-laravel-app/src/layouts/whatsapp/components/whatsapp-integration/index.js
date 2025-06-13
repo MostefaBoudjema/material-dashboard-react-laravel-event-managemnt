@@ -31,13 +31,15 @@ const WhatsAppIntegration = () => {
   const handleSendMessage = async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
       const response = await axios.post("/whatsapp/send", {
         phoneNumber,
         message,
       }, {
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          "Accept": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {})
         }
       });
 

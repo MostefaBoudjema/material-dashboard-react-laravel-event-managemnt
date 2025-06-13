@@ -37,7 +37,6 @@ Route::prefix('v2')->middleware('json.api')->group(function () {
     Route::post('/password-forgot', ForgotPasswordController::class);
     Route::post('/password-reset', ResetPasswordController::class)->name('password.reset');
     
-    Route::post('/whatsapp/send', [WhatsAppController::class, 'sendMessage']);
 });
 
 JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar $server) {
@@ -58,4 +57,6 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::post('/events/{eventId}/cancel', [EventParticipantController::class, 'cancel']);
     Route::post('/waitlist/{eventId}/join', [EventWaitlistController::class, 'joinWaitlist']);
     Route::post('/payments/intent', [PaymentController::class, 'createPaymentIntent'])->middleware('auth:api');
+    
+    Route::post('/whatsapp/send', [WhatsAppController::class, 'sendMessage'])->middleware('auth:api');
 });

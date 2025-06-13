@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\WhatsAppMessage;
 
 class WhatsAppController extends Controller
 {
@@ -85,6 +86,17 @@ class WhatsAppController extends Controller
                 'From' => 'whatsapp:+14155238886', // Replace with your Twilio WhatsApp number
                 'To' => 'whatsapp:' . $phoneNumber,
                 'Body' => $validated['message']
+            ]);
+
+            // Save message to database
+            WhatsAppMessage::create([
+                'user_id' => auth()->id(),
+                'to' => $phoneNumber,
+                'from' => '+14155238886',
+                'body' => $validated['message'],
+                'status' => $response->successful() ? 'sent' : 'failed',
+                'response' => $response->json(),
+                'error_message' => $response->successful() ? null : ($response->body() ?: 'Unknown error'),
             ]);
 
             // Log the complete response for debugging
