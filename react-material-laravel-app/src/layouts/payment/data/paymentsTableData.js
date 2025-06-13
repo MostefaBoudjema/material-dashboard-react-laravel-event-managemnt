@@ -19,7 +19,7 @@ export default function paymentsTableData(payments, handleOpenDialog, handleDele
       { Header: "amount", accessor: "amount", width: "15%", align: "left" },
       { Header: "currency", accessor: "currency", align: "center" },
       { Header: "status", accessor: "status", align: "center" },
-      { Header: "payment_method", accessor: "payment_method", align: "center" },
+    //   { Header: "payment_method", accessor: "payment_method", align: "center" },
       { Header: "created_at", accessor: "created_at", align: "center" },
     ],
     rows: payments.map((payment) => ({
@@ -35,9 +35,9 @@ export default function paymentsTableData(payments, handleOpenDialog, handleDele
           />
         </MDBox>
       ),
-      payment_method: <Job title={payment.payment_method_details?.type || 'N/A'} />,
+    //   payment_method: <Job title={payment.payment_method_details?.type || 'N/A'} />,
       created_at: <MDTypography variant="caption" color="text" fontWeight="medium">
-        {new Date(payment.created * 1000).toLocaleString()}
+        {new Date(payment.created_at).toLocaleString()}
       </MDTypography>,
     })),
   };
