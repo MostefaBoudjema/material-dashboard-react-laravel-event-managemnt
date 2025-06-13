@@ -36,5 +36,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
         'webhook' => env('STRIPE_WEBHOOK_SECRET'),
     ],
+    'whatsapp' => [
+        'api_url' => env('WHATSAPP_API_URL'),
+        'token' => env('WHATSAPP_TOKEN'),
+        'account_sid' => env('TWILIO_ACCOUNT_SID'),
+    ],
 
 ];

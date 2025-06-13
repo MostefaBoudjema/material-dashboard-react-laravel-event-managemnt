@@ -11,6 +11,7 @@ import EventCalendar from "layouts/events-calendar";
 import Users from "layouts/users";
 import Roles from "layouts/roles";
 import Payment from "layouts/payment";
+import WhatsApp from "layouts/whatsapp";
 
 // Function to generate routes based on isAdmin
 const getRoutes = (isAdmin) => [
@@ -53,6 +54,18 @@ const getRoutes = (isAdmin) => [
     icon: <Icon fontSize="small">payment</Icon>,
     route: "/stripe-payment",
     component: <Payment />,
+  },
+  {
+    type: "title",
+    title: "Twilio WhatsApp",
+  },
+  {
+    type: "collapse",
+    name: "WhatsApp Integration",
+    key: "whatsapp-integration",
+    icon: <Icon fontSize="small">phone</Icon>,
+    route: "/whatsapp-integration",
+    component: <WhatsApp />,
   },
   // {
   //   type: "dividerAdmin",
