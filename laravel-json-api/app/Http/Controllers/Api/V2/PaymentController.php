@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Stripe\Exception\ApiErrorException;
+use App\Models\PaymentHistory;
 
 class PaymentController extends Controller
 {
@@ -44,6 +45,17 @@ class PaymentController extends Controller
                 'metadata' => [
                     'user_id' => auth()->id(),
                 ],
+            ]);
+
+            // Save payment intent to local database
+            PaymentHistory::create([
+                'user_id' => auth()->id(),
+                'stripe_payment_intent_id' => $paymentIntent->id,
+                'amount' => $paymentIntent->amount,
+                'currency' => $paymentIntent->currency,
+                'status' => $paymentIntent->status,
+                'client_secret' => $paymentIntent->client_secret,
+                'metadata' => $paymentIntent->metadata ?? [],
             ]);
 
             // Log success
