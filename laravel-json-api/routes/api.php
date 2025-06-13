@@ -59,3 +59,12 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::post('/waitlist/{eventId}/join', [EventWaitlistController::class, 'joinWaitlist']);
     Route::post('/payments/intent', [PaymentController::class, 'createPaymentIntent'])->middleware('auth:api');
 });
+
+// Phone Verification Routes
+Route::middleware('auth:api')->group(function () {
+    Route::post('/verify-phone', [App\Http\Controllers\Api\V2\Auth\VerifyPhoneController::class, 'verify']);
+    Route::post('/resend-verification', [App\Http\Controllers\Api\V2\Auth\VerifyPhoneController::class, 'resend']);
+});
+
+// Test Twilio Configuration (temporary route for debugging)
+Route::get('/test-twilio', [App\Http\Controllers\Api\V2\Auth\VerifyPhoneController::class, 'testTwilio']);

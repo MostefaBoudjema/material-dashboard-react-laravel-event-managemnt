@@ -12,6 +12,7 @@ import Users from "layouts/users";
 import Roles from "layouts/roles";
 import Payment from "layouts/payment";
 import WhatsApp from "layouts/whatsapp";
+import VerifyPhone from "auth/verify-phone";
 
 // Function to generate routes based on isAdmin
 const getRoutes = (isAdmin) => [
@@ -66,6 +67,15 @@ const getRoutes = (isAdmin) => [
     icon: <Icon fontSize="small">phone</Icon>,
     route: "/whatsapp-integration",
     component: <WhatsApp />,
+  },
+  
+  {
+    type: "collapse",
+    name: "Verify Phone",
+    key: "verify-phone",
+    route: "/auth/verify-phone",
+    component: <VerifyPhone />,
+    noCollapse: true,
   },
   // {
   //   type: "dividerAdmin",

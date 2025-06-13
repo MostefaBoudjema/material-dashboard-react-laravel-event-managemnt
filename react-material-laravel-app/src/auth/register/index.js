@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -24,10 +24,12 @@ import { InputLabel } from "@mui/material";
 
 function Register() {
   const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
+    phone_number: "",
     password: "",
     agree: false,
   });
@@ -35,6 +37,7 @@ function Register() {
   const [errors, setErrors] = useState({
     nameError: false,
     emailError: false,
+    phoneError: false,
     passwordError: false,
     agreeError: false,
     error: false,
@@ -52,6 +55,7 @@ function Register() {
     e.preventDefault();
 
     const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const phoneFormat = /^\+[1-9]\d{1,14}$/;
 
     if (inputs.name.trim().length === 0) {
       setErrors({ ...errors, nameError: true });
@@ -60,6 +64,11 @@ function Register() {
 
     if (inputs.email.trim().length === 0 || !inputs.email.trim().match(mailFormat)) {
       setErrors({ ...errors, emailError: true });
+      return;
+    }
+
+    if (!inputs.phone_number.match(phoneFormat)) {
+      setErrors({ ...errors, phoneError: true });
       return;
     }
 
@@ -74,7 +83,12 @@ function Register() {
     }
 
     // here will be the post action to add a user to the db
-    const newUser = { name: inputs.name, email: inputs.email, password: inputs.password };
+    const newUser = { 
+      name: inputs.name, 
+      email: inputs.email, 
+      phone_number: inputs.phone_number,
+      password: inputs.password 
+    };
 
     const myData = {
       data: {
@@ -100,6 +114,7 @@ function Register() {
       setInputs({
         name: "",
         email: "",
+        phone_number: "",
         password: "",
         agree: false,
       });
@@ -107,11 +122,15 @@ function Register() {
       setErrors({
         nameError: false,
         emailError: false,
+        phoneError: false,
         passwordError: false,
         agreeError: false,
         error: false,
         errorText: "",
       });
+
+      // Redirect to phone verification page
+      navigate("/auth/verify-phone");
     } catch (err) {
       setErrors({ ...errors, error: true, errorText: err.message });
       console.error(err);
@@ -136,7 +155,7 @@ function Register() {
             Join us today
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Enter your email and password to register
+            Enter your details to register
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -184,6 +203,30 @@ function Register() {
               {errors.emailError && (
                 <MDTypography variant="caption" color="error" fontWeight="light">
                   The email must be valid
+                </MDTypography>
+              )}
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="tel"
+                label="Phone Number"
+                variant="standard"
+                fullWidth
+                value={inputs.phone_number}
+                name="phone_number"
+                onChange={changeHandler}
+                error={errors.phoneError}
+                placeholder="+1234567890"
+                inputProps={{
+                  autoComplete: "tel",
+                  form: {
+                    autoComplete: "off",
+                  },
+                }}
+              />
+              {errors.phoneError && (
+                <MDTypography variant="caption" color="error" fontWeight="light">
+                  Please enter a valid phone number in E.164 format (e.g., +1234567890)
                 </MDTypography>
               )}
             </MDBox>
@@ -238,7 +281,7 @@ function Register() {
             )}
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" color="info" fullWidth type="submit">
-                sign in
+                sign up
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
