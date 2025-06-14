@@ -14,7 +14,7 @@ import {
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
-const WhatsAppIntegration = () => {
+const WhatsAppIntegration = ({ onMessageSent }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,6 +52,10 @@ const WhatsAppIntegration = () => {
           message: "Message sent successfully!",
           severity: "success"
         });
+        // Call the callback to refresh the message list
+        if (onMessageSent) {
+          onMessageSent();
+        }
       } else {
         throw new Error(response.data.message || "Failed to send message");
       }
