@@ -17,6 +17,7 @@ export default function whatsappTableData(whatsapp, handleOpenDialog, handleDele
       { Header: "to", accessor: "to", width: "15%", align: "center" },
       { Header: "Message", accessor: "body", align: "center" },
       { Header: "status", accessor: "status", align: "center" },
+      { Header: "error message", accessor: "error", align: "center" },
       { Header: "created_at", accessor: "created_at", align: "center" },
     ],
     rows: whatsapp.map((message) => ({
@@ -33,6 +34,8 @@ export default function whatsappTableData(whatsapp, handleOpenDialog, handleDele
           />
         </MDBox>
       ),
+      
+      error: <Job title={message.error_message ? JSON.parse(message.error_message).message : ''} />,
       created_at: <MDTypography variant="caption" color="text" fontWeight="medium">
         {new Date(message.created_at).toLocaleString()}
       </MDTypography>,
