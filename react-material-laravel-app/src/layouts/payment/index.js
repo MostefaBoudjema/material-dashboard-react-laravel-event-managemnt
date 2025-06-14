@@ -12,23 +12,23 @@ import PaymentService from "services/payment-service";
 import PaymentForm from "./components/PaymentForm";
 
 function Payment() {
-  const token = localStorage.getItem('token');
-  const [payments, setPayments] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [currentPayment, setCurrentPayment] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [formData, setFormData] = useState({
+  const token=localStorage.getItem('token');
+  const [payments, setPayments]=useState([]);
+  const [openDialog, setOpenDialog]=useState(false);
+  const [currentPayment, setCurrentPayment]=useState(null);
+  const [errorMessage, setErrorMessage]=useState("");
+  const [successMessage, setSuccessMessage]=useState("");
+  const [formData, setFormData]=useState({
     amount: "",
     currency: "usd",
     payment_method: "",
     status: ""
   });
 
-  const fetchPayments = async () => {
+  const fetchPayments=async () => {
     try {
       setErrorMessage("");
-      const data = await PaymentService.getPayments(token);
+      const data=await PaymentService.getPayments(token);
       setPayments(data);
     } catch (error) {
       setErrorMessage("Failed to fetch payments.");
@@ -41,10 +41,10 @@ function Payment() {
     fetchPayments();
   }, [token]);
 
-  const handleOpenDialog = async (payment = null) => {
+  const handleOpenDialog=async (payment=null) => {
     try {
       if (payment) {
-        const data = await PaymentService.showPayment(token, payment.id);
+        const data=await PaymentService.showPayment(token, payment.id);
         setCurrentPayment(payment);
         setFormData(data);
       } else {
@@ -60,16 +60,16 @@ function Payment() {
     }
   };
 
-  const handleCloseDialog = () => setOpenDialog(false);
+  const handleCloseDialog=() => setOpenDialog(false);
 
-  const handleFormSubmit = async () => {
+  const handleFormSubmit=async () => {
     try {
       if (currentPayment) {
         await PaymentService.updatePayment(token, currentPayment.id, formData);
       } else {
         await PaymentService.createPayment(token, formData);
       }
-      const updatedPayments = await PaymentService.getPayments(token);
+      const updatedPayments=await PaymentService.getPayments(token);
       setPayments(updatedPayments);
       handleCloseDialog();
       setErrorMessage("");
@@ -80,10 +80,10 @@ function Payment() {
     }
   };
 
-  const handleDelete = async (payment) => {
+  const handleDelete=async (payment) => {
     try {
       await PaymentService.deletePayment(token, payment.id);
-      setPayments(payments.filter(p => p.id !== payment.id));
+      setPayments(payments.filter(p => p.id!==payment.id));
       setSuccessMessage("Payment deleted successfully!");
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
@@ -93,7 +93,7 @@ function Payment() {
     }
   };
 
-  const { columns, rows } = paymentsTableData(payments, handleOpenDialog, handleDelete);
+  const { columns, rows }=paymentsTableData(payments, handleOpenDialog, handleDelete);
 
   return (
     <DashboardLayout>
@@ -103,10 +103,21 @@ function Payment() {
           {/* Payment Form Section */}
           <Grid item xs={12}>
             <Card>
+              <MDBox
+              mx={2}
+              mt={-3}
+              py={3}
+              px={5}
+                variant="gradient"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="info"
+              >
+                <MDTypography variant="h6" color="white">
+                Payment Form
+                </MDTypography>
+              </MDBox>
               <MDBox p={3}>
-                <MDBox mb={3}>
-                  <MDTypography variant="h5">Payment Form</MDTypography>
-                </MDBox>
                 <PaymentForm onPaymentSuccess={fetchPayments} />
               </MDBox>
             </Card>
@@ -129,7 +140,7 @@ function Payment() {
               </MDBox>
 
               <MDBox pt={3}>
-                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {errorMessage&&<Alert severity="error">{errorMessage}</Alert>}
                 <Snackbar
                   open={!!successMessage}
                   autoHideDuration={3000}
@@ -155,13 +166,13 @@ function Payment() {
       </MDBox>
 
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth>
-        <DialogTitle>{currentPayment ? "Edit Payment" : "Create Payment"}</DialogTitle>
+        <DialogTitle>{currentPayment? "Edit Payment":"Create Payment"}</DialogTitle>
         <DialogContent>
-          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+          {errorMessage&&<Alert severity="error">{errorMessage}</Alert>}
           {Object.keys(formData)
             .filter((key) => !["id", "created_at", "updated_at"].includes(key))
             .map((key) => (
-              key === "status" ? (
+              key==="status"? (
                 <TextField
                   key={key}
                   select
@@ -176,7 +187,7 @@ function Payment() {
                   <option value="pending">Pending</option>
                   <option value="failed">Failed</option>
                 </TextField>
-              ) : key === "currency" ? (
+              ):key==="currency"? (
                 <TextField
                   key={key}
                   select
@@ -191,7 +202,7 @@ function Payment() {
                   <option value="eur">EUR</option>
                   <option value="gbp">GBP</option>
                 </TextField>
-              ) : (
+              ):(
                 <TextField
                   key={key}
                   fullWidth
@@ -199,7 +210,7 @@ function Payment() {
                   value={formData[key]}
                   onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                   margin="normal"
-                  type={key === "amount" ? "number" : "text"}
+                  type={key==="amount"? "number":"text"}
                 />
               )
             ))}

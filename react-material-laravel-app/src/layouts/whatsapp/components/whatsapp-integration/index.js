@@ -83,7 +83,7 @@ const WhatsAppIntegration = () => {
               coloredShadow="info"
             >
               <MDTypography variant="h6" color="white">
-                WhatsApp Integration
+                WhatsApp Form
               </MDTypography>
             </MDBox>
             <CardContent>

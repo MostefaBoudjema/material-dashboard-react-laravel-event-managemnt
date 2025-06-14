@@ -63,4 +63,6 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::put('/payments/{id}', [PaymentController::class, 'update'])->middleware('auth:api');
     
     Route::post('/whatsapp/send', [WhatsAppController::class, 'sendMessage'])->middleware('auth:api');
+    
+    Route::resource('whatsapp', WhatsAppController::class);
 });

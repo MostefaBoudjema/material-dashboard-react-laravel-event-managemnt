@@ -29,6 +29,140 @@ class WhatsAppController extends Controller
         ]);
     }
 
+    /**
+     * Display a listing of the WhatsApp messages.
+     */
+    public function index()
+    {
+        try {
+            $messages = WhatsAppMessage::where('user_id', auth()->id())
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $messages
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching WhatsApp messages: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch messages'
+            ], 500);
+        }
+    }
+
+    /**
+     * Store a newly created WhatsApp message.
+     */
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'to' => 'required|string|regex:/^\+[1-9]\d{1,14}$/',
+                'body' => 'required|string|max:4096',
+            ]);
+
+            $message = WhatsAppMessage::create([
+                'user_id' => auth()->id(),
+                'to' => $validated['to'],
+                'from' => '+14155238886', // Your Twilio WhatsApp number
+                'body' => $validated['body'],
+                'status' => 'pending',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $message
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Error creating WhatsApp message: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create message'
+            ], 500);
+        }
+    }
+
+    /**
+     * Display the specified WhatsApp message.
+     */
+    public function show($id)
+    {
+        try {
+            $message = WhatsAppMessage::where('user_id', auth()->id())
+                ->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $message
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching WhatsApp message: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Message not found'
+            ], 404);
+        }
+    }
+
+    /**
+     * Update the specified WhatsApp message.
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $message = WhatsAppMessage::where('user_id', auth()->id())
+                ->findOrFail($id);
+
+            $validated = $request->validate([
+                'to' => 'sometimes|required|string|regex:/^\+[1-9]\d{1,14}$/',
+                'body' => 'sometimes|required|string|max:4096',
+                'status' => 'sometimes|required|string|in:pending,sent,failed',
+            ]);
+
+            $message->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'data' => $message
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error updating WhatsApp message: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update message'
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove the specified WhatsApp message.
+     */
+    public function destroy($id)
+    {
+        try {
+            $message = WhatsAppMessage::where('user_id', auth()->id())
+                ->findOrFail($id);
+
+            $message->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Message deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deleting WhatsApp message: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete message'
+            ], 500);
+        }
+    }
+
+    /**
+     * Send a WhatsApp message.
+     */
     public function sendMessage(Request $request)
     {
         try {
@@ -89,7 +223,7 @@ class WhatsAppController extends Controller
             ]);
 
             // Save message to database
-            WhatsAppMessage::create([
+            $message = WhatsAppMessage::create([
                 'user_id' => auth()->id(),
                 'to' => $phoneNumber,
                 'from' => '+14155238886',
@@ -108,7 +242,8 @@ class WhatsAppController extends Controller
             if ($response->successful()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Message sent successfully'
+                    'message' => 'Message sent successfully',
+                    'data' => $message
                 ]);
             }
 
